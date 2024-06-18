@@ -25,6 +25,7 @@ import {
 import { useRegister } from "../hooks/useRegister";
 import { useEmailStore } from "../state-managements/store/emailStore";
 import useHospital, { Hospital } from "../hooks/useHospital";
+import {useAuth} from "../../../components/authContext"
 
 const RegistrationFormGrid: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,8 +34,11 @@ const RegistrationFormGrid: React.FC = () => {
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
   const [isHospitalAdmin, setIsHospitalAdmin] = useState(false);
   const { loading, error, registerUser, response } = useRegister();
+  const {user} = useAuth()
   const navigate = useNavigate();
-  const { data: hospitals } = useHospital(query);
+  const hospitalsData = user && user.is_superuser ? useHospital(query) : { data: [] };
+  const { data: hospitals } = hospitalsData;
+  
 
   const {
     handleSubmit,
@@ -67,21 +71,38 @@ const RegistrationFormGrid: React.FC = () => {
   };
 
   const onSubmit = async (formData: RegistrationFormData) => {
-    const hospitalId = selectedHospital ? selectedHospital.id : null;
-    const result = await registerUser({
-      ...formData,
-      hospital: hospitalId,
-      is_hospital_admin: isHospitalAdmin,
-    });
-    const userEmail = formData.email;
-
-    if (!result) {
-      console.log("Registration failed.");
-    } else {
-      useEmailStore.getState().setUserEmail(userEmail);
-      navigate("/onboarding");
+    if(user && user.is_superuser){
+        const hospitalId = selectedHospital ? selectedHospital.id : null;
+        const result = await registerUser({
+            ...formData,
+            hospital: hospitalId,
+            is_hospital_admin: isHospitalAdmin,
+        });
+        const userEmail = formData.email;
+    
+        if (!result) {
+            console.log("Registration failed.");
+        } else {
+            useEmailStore.getState().setUserEmail(userEmail);
+            navigate("/onboarding");
+        }
+    } else if(user) {
+        const result = await registerUser({
+            ...formData,
+            hospital: user.hospital,
+            is_hospital_admin: isHospitalAdmin,
+        });
+        const userEmail = formData.email;
+    
+        if (!result) {
+            console.log("Registration failed.");
+        } else {
+            useEmailStore.getState().setUserEmail(userEmail);
+            navigate("/onboarding");
+        }
     }
-  };
+};
+
 
   return (
     <Box
@@ -167,46 +188,47 @@ const RegistrationFormGrid: React.FC = () => {
               <Text color="red.500">{errors.password.message}</Text>
             )}
           </FormControl>
+          
 
-          <FormControl id="hospital">
-            <FormLabel mb={1}>Hospital</FormLabel>
-            <Input
-              {...register("hospital")}
-              type="text"
-              placeholder="Search for hospital"
-              value={query}
-              onChange={handleInputChange}
-            />
-            {searchResults.length > 0 && (
-              <Box
-                borderWidth={1}
-                borderRadius="md"
-                borderColor="gray.200"
-                bg="green"
-                boxShadow="md"
-                maxH="48"
-                overflowY="auto"
-                position="absolute"
-                w="full"
-                zIndex="1"
-              >
-                {searchResults.map((hospital) => (
-                  <Box
-                    key={hospital.id}
-                    p={2}
-                    _hover={{ bg: "gray.100" }}
-                    cursor="pointer"
-                    onClick={() => handleHospitalSelect(hospital)}
-                  >
-                    {hospital.name}
-                  </Box>
-                ))}
-              </Box>
-            )}
-            {errors.hospital && (
-              <Text color="red.500">{errors.hospital.message}</Text>
-            )}
-          </FormControl>
+          <FormControl id="hospital" hidden={!user || !user.is_superuser}>
+  <FormLabel mb={1}>Hospital</FormLabel>
+  <Input
+    {...register("hospital")}
+    type="text"
+    placeholder="Search for hospital"
+    value={query}
+    onChange={handleInputChange}
+  />
+  {searchResults.length > 0 && (
+    <Box
+      borderWidth={1}
+      borderRadius="md"
+      borderColor="gray.200"
+      bg="green"
+      boxShadow="md"
+      maxH="48"
+      overflowY="auto"
+      position="absolute"
+      w="full"
+      zIndex="1"
+    >
+      {searchResults.map((hospital) => (
+        <Box
+          key={hospital.id}
+          p={2}
+          _hover={{ bg: "gray.100" }}
+          cursor="pointer"
+          onClick={() => handleHospitalSelect(hospital)}
+        >
+          {hospital.name}
+        </Box>
+      ))}
+    </Box>
+  )}
+  {errors.hospital && (
+    <Text color="red.500">{errors.hospital.message}</Text>
+  )}
+</FormControl>
 
           <FormControl id="isHospitalAdmin">
             <FormLabel mb={1}>Is Hospital Admin</FormLabel>

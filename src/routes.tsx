@@ -28,11 +28,11 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'register', element: <RegistrationPage /> },
       { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
-      { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
       { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
       { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
     ],
   },
+  { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/not-authenticated', element: <NotAuthenticatedPage /> },
 ]);

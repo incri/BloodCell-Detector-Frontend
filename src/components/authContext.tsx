@@ -1,9 +1,17 @@
-// auth-context.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
+
+interface User {
+  id: number;
+  username: string;
+  is_hospital_admin: boolean;
+  is_superuser: boolean;
+  hospital:string
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (token: string) => void;
+  user: User | null; // Include user details
+  login: (token: string, user: User) => void; // Modify login function to accept user details
   logout: () => void;
 }
 
@@ -16,19 +24,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const token = localStorage.getItem("authToken");
     return !!token;
   });
+  const [user, setUser] = useState<User | null>(() => {
+    const userString = localStorage.getItem("user");
+    return userString ? JSON.parse(userString) : null;
+  });
 
-  const login = (token: string) => {
+  const login = (token: string, userData: User) => {
     localStorage.setItem("authToken", token);
+    localStorage.setItem("user", JSON.stringify(userData));
     setIsAuthenticated(true);
+    setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
     setIsAuthenticated(false);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
