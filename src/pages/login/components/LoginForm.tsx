@@ -1,3 +1,4 @@
+// components/LoginForm.tsx
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import {
@@ -17,7 +18,7 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"; // Import the zodResolver
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "../validations/loginSchema";
 
 const LoginForm: React.FC = () => {
@@ -42,8 +43,6 @@ const LoginForm: React.FC = () => {
     const result = await loginUser(data);
 
     if (!result) {
-      // Handle registration failure
-
       console.log("login failed.");
     } else {
       navigate("/");
@@ -98,7 +97,7 @@ const LoginForm: React.FC = () => {
             {(errors.password && (
               <Text color="red.500">{errors.password.message}</Text>
             )) ||
-              (status === 401 && data.detail && (
+              (status === 401 && data?.detail && (
                 <Text color="red.500">username or password did not match.</Text>
               ))}
 
