@@ -25,7 +25,7 @@ export const registrationFormSchema = z.object({
 
   hospital: z
     .string()
-    .nonempty("Hospital name is required"),
+    .nullable(),
 
 
   is_hospital_admin: z
