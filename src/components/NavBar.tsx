@@ -1,19 +1,12 @@
 // components/Navbar.tsx
-import { HStack, Image, Button } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { HStack, Image } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import Logo from "../assets/Logo.png";
-import ColorModeSwitch from "./ColorModeSwitch";
 import { useAuth } from "./authContext";
 import ProfileDrawer from "./ProfileDrawer";
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -27,7 +20,6 @@ const Navbar = () => {
           src="https://via.placeholder.com/50"
           alt="Profile Image"
         />
-
         )}
         
       </HStack>

@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
       { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
       { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
-      { path: 'me', element: <ProfilePage /> },
+      { path: ':username/', element: <ProfilePage /> },
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
