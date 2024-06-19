@@ -13,6 +13,7 @@ import RegistrationPage from './pages/registration/pages/RegistrationPage';
 import NotAuthenticatedPage from './pages/NotAuthenticatedPage';
 import ProtectedRoute from './protectedRoutes';
 import { AuthProvider } from './components/authContext';
+import ProfilePage from './pages/login/pages/ProfilePage';
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
       { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
       { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
+      { path: 'me', element: <ProfilePage /> },
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },

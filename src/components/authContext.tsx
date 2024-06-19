@@ -6,6 +6,7 @@ interface User {
   is_hospital_admin: boolean;
   is_superuser: boolean;
   hospital:string
+  full_name: string
 }
 
 interface AuthContextType {
