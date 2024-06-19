@@ -13,7 +13,7 @@ import RegistrationPage from './pages/registration/pages/RegistrationPage';
 import NotAuthenticatedPage from './pages/NotAuthenticatedPage';
 import ProtectedRoute from './protectedRoutes';
 import { AuthProvider } from './components/authContext';
-import ProfilePage from './pages/login/pages/ProfilePage';
+import ProfilePage from './pages/profile/pages/ProfilePage';
 
 
 const router = createBrowserRouter([
