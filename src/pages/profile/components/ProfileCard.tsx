@@ -13,8 +13,12 @@ import {
 } from '@chakra-ui/react';
 import useUserDetail from '../hooks/useUserDetail';
 
-const ProfileCard: React.FC = () => {
-  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
+interface ProfileCardProps {
+  onEdit: () => void;
+}
+
+const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
+  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '70%' });
   const { data: userDetail, error, isLoading } = useUserDetail();
 
   if (isLoading) {
@@ -72,7 +76,7 @@ const ProfileCard: React.FC = () => {
           <Text fontSize="lg" color="gray.500">
             {userDetail.username}
           </Text>
-          <Button width="100%" colorScheme="teal" variant="solid" onClick={() => { }}>
+          <Button width="100%" colorScheme="teal" variant="solid" onClick={onEdit}>
             Edit Profile
           </Button>
           <Divider orientation="horizontal" />

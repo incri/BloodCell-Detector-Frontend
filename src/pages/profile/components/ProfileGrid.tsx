@@ -1,9 +1,11 @@
-// src/ProfileGrid.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid, GridItem, Box, useBreakpointValue } from '@chakra-ui/react';
 import ProfileCard from './ProfileCard';
+import ProfileEditForm from './ProfileEditForm';
 
 const ProfileGrid: React.FC = () => {
+  const [isEditing, setIsEditing] = useState(false);
+
   // Determine the grid template columns based on the breakpoint
   const gridTemplateColumns = useBreakpointValue({
     base: '1fr', // Single column for small and medium devices
@@ -14,11 +16,12 @@ const ProfileGrid: React.FC = () => {
     <Grid templateColumns={gridTemplateColumns} gap={4} p={4}>
       <GridItem>
         <Box bg="transparent" p={4} borderRadius="md">
-
-        <ProfileCard
-          />
-          
-    </Box>
+          {isEditing ? (
+            <ProfileEditForm onSave={() => setIsEditing(false)} />
+          ) : (
+            <ProfileCard onEdit={() => setIsEditing(true)} />
+          )}
+        </Box>
       </GridItem>
       <GridItem display={{ base: 'none', lg: 'block' }}>
         <Box bg="gray.200" p={4} borderRadius="md">
