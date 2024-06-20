@@ -10,19 +10,20 @@ import {
   Spinner,
   Alert,
   AlertIcon,
-  Text
 } from '@chakra-ui/react';
 import useUserDetail from '../hooks/useUserDetail';
 
 interface ProfileEditFormProps {
-  onSave: () => void;
+  onSave: (details: { firstName: string; lastName: string;}) => void;
+  firstName: string;
+  lastName: string;
 }
 
-const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave }) => {
-  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '70%' });
-  const { data: userDetail, error, isLoading } = useUserDetail();
-  const [firstName, setFirstName] = useState(userDetail?.first_name || '');
-  const [lastName, setLastName] = useState(userDetail?.last_name || '');
+const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave, firstName, lastName}) => {
+  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
+  const { error, isLoading } = useUserDetail();
+  const [currentFirstName, setCurrentFirstName] = useState(firstName);
+  const [currentLastName, setCurrentLastName] = useState(lastName);
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,9 +33,10 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave }) => {
   };
 
   const handleSave = () => {
-    // Implement the save functionality here
-    console.log('Save button clicked');
-    onSave();
+    onSave({
+      firstName: currentFirstName,
+      lastName: currentLastName,
+    });
   };
 
   if (isLoading) {
@@ -56,14 +58,6 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave }) => {
     );
   }
 
-  if (!userDetail) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Text>No user data available</Text>
-      </Box>
-    );
-  }
-
   return (
     <Box
       bgSize="cover"
@@ -76,20 +70,21 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave }) => {
     >
       <VStack spacing={6}>
         <Box position="relative" boxSize="200px" borderRadius="full" overflow="hidden" border="3px solid" borderColor="gray.200" boxShadow="lg">
-          <Image src={"https://via.placeholder.com/150"} boxSize="100%" objectFit="cover" />
+          <Image src={avatar ? URL.createObjectURL(avatar) : "https://via.placeholder.com/150"} boxSize="100%" objectFit="cover" />
           <Input type="file" position="absolute" top="0" left="0" width="100%" height="100%" opacity="0" cursor="pointer" onChange={handleAvatarChange} />
         </Box>
         <VStack align="flex-start" spacing={2} width={profileInfoWidth}>
           <Input
             placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={currentFirstName}
+            onChange={(e) => setCurrentFirstName(e.target.value)}
           />
           <Input
             placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={currentLastName}
+            onChange={(e) => setCurrentLastName(e.target.value)}
           />
+          
           <Button width="100%" colorScheme="teal" variant="solid" onClick={handleSave}>
             Save Profile
           </Button>

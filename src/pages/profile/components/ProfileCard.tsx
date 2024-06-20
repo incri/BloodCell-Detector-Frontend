@@ -14,11 +14,11 @@ import {
 import useUserDetail from '../hooks/useUserDetail';
 
 interface ProfileCardProps {
-  onEdit: () => void;
+  onEdit: (details: { firstName: string; lastName: string; username: string }) => void;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
-  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '70%' });
+  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
   const { data: userDetail, error, isLoading } = useUserDetail();
 
   if (isLoading) {
@@ -48,6 +48,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
     );
   }
 
+  const handleEditClick = () => {
+    onEdit({
+      firstName: userDetail.first_name,
+      lastName: userDetail.last_name,
+      username: userDetail.username,
+    });
+  };
+
   return (
     <Box
       bgSize="cover"
@@ -76,7 +84,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
           <Text fontSize="lg" color="gray.500">
             {userDetail.username}
           </Text>
-          <Button width="100%" colorScheme="teal" variant="solid" onClick={onEdit}>
+          <Button width="100%" colorScheme="teal" variant="solid" onClick={handleEditClick}>
             Edit Profile
           </Button>
           <Divider orientation="horizontal" />
