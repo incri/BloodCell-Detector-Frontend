@@ -8,6 +8,7 @@ const ProfileGrid: React.FC = () => {
   const [userDetails, setUserDetails] = useState({
     firstName: '',
     lastName: '',
+    email: ''
   });
 
   // Determine the grid template columns based on the breakpoint
@@ -16,12 +17,12 @@ const ProfileGrid: React.FC = () => {
     lg: '2fr 3fr', // 2:3 ratio for large devices and up
   });
 
-  const handleEdit = (details: { firstName: string; lastName: string;}) => {
+  const handleEdit = (details: { firstName: string; lastName: string; email:string}) => {
     setUserDetails(details);
     setIsEditing(true);
   };
 
-  const handleSave = (details: { firstName: string; lastName: string;}) => {
+  const handleSave = (details: { firstName: string; lastName: string; email : string}) => {
     // Implement save logic here, if needed
     setUserDetails(details);
     setIsEditing(false);
@@ -36,6 +37,7 @@ const ProfileGrid: React.FC = () => {
               onSave={handleSave}
               firstName={userDetails.firstName}
               lastName={userDetails.lastName}
+              email = {userDetails.email}
             />
           ) : (
             <ProfileCard onEdit={handleEdit} />

@@ -14,7 +14,7 @@ import {
 import useUserDetail from '../hooks/useUserDetail';
 
 interface ProfileCardProps {
-  onEdit: (details: { firstName: string; lastName: string; username: string }) => void;
+  onEdit: (details: { firstName: string; lastName: string; username: string, email:string }) => void;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
@@ -53,6 +53,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ onEdit }) => {
       firstName: userDetail.first_name,
       lastName: userDetail.last_name,
       username: userDetail.username,
+      email:userDetail.email
     });
   };
 
