@@ -1,4 +1,3 @@
-// router.tsx
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -26,12 +25,12 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
+      { path: '/', element: <HomePage /> },
       { path: 'register', element: <RegistrationPage /> },
       { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
       { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
       { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
-      { path: ':username/', element: <ProfilePage /> },
+      { path: ':username/', element: <ProfilePage /> }, // Note the trailing slash in the path
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
