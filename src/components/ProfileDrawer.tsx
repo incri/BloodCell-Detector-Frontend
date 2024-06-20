@@ -91,10 +91,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ src, alt }) => {
               <VStack spacing={1} align={'flex-start'}>
               <ColorModeSwitch /> 
               <Divider orientation='horizontal' />
-              <MenuButton icon={FaUser} text="Profile" to={"/me"}/>
+              <MenuButton icon={FaUser} text="Profile" to={`/${user?.username}`} />
               <Divider orientation='horizontal' />
 
-              <MenuButton icon={FaCog} text="Settings" to={"/me"}/>
+              <MenuButton icon={FaCog} text="Settings" to={"/${user.username}"}/>
 
               <Button
                 w="100%"

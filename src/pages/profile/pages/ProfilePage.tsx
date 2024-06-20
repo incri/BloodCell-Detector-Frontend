@@ -1,7 +1,8 @@
+import ProfileGrid from "../components/ProfileGrid"
 
 const ProfilePage = () => {
   return (
-    <div>ProfilePage</div>
+    <ProfileGrid />
   )
 }
 
