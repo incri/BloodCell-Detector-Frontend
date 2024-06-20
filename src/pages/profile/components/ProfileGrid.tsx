@@ -16,10 +16,6 @@ const ProfileGrid: React.FC = () => {
         <Box bg="transparent" p={4} borderRadius="md">
 
         <ProfileCard
-            profilePicture="https://via.placeholder.com/250"
-            fullName="John Doe"
-            username="johndoe"
-            onEditProfile={() => {}}
           />
           
     </Box>

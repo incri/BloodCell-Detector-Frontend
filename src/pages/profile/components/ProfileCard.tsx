@@ -1,45 +1,84 @@
-// src/ProfileCard.tsx
 import React from 'react';
-import { Box, VStack, Text, Button, Image, Divider, useBreakpointValue } from '@chakra-ui/react';
+import {
+  Box,
+  VStack,
+  Text,
+  Button,
+  Image,
+  Divider,
+  useBreakpointValue,
+  Spinner,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
+import useUserDetail from '../hooks/useUserDetail';
 
-interface ProfileCardProps {
-  profilePicture: string;
-  fullName: string;
-  username: string;
-  onEditProfile: () => void;
-}
+const ProfileCard: React.FC = () => {
+  const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
+  const { data: userDetail, error, isLoading } = useUserDetail();
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ profilePicture, fullName, username, onEditProfile }) => {
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
-    const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Alert status="error">
+          <AlertIcon />
+          {error}
+        </Alert>
+      </Box>
+    );
+  }
+
+  if (!userDetail) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Text>No user data available</Text>
+      </Box>
+    );
+  }
+
   return (
-    <VStack
-      p={6}
+    <Box
+      bgSize="cover"
+      bgPosition="center"
+      p={8}
       borderRadius="md"
       width="100%"
-      justifyContent="space-between"
-      alignItems="flex-end"
+      maxWidth="800px"
+      mx="auto"
     >
-      <Box
-        boxSize="250px"
-        borderRadius="full"
-        overflow="hidden"
-        border="2px"
-        borderColor="gray.200"
-        cursor="pointer"
-      >
-        <Image src={profilePicture} boxSize="100%" objectFit="cover" />
-      </Box>
-      <VStack align="flex-center" spacing={2} width={profileInfoWidth}>
-        <Text fontSize="xl" fontWeight="bold">{fullName}</Text>
-        <Text fontSize="md" color="gray.500">@{username}</Text>
-        <Button colorScheme="teal" onClick={onEditProfile}>Edit Profile</Button>
-        <Box boxSize={4} />
-
-      <Divider orientation="horizontal" />
+      <VStack spacing={6}>
+        <Box
+          boxSize="200px"
+          borderRadius="full"
+          overflow="hidden"
+          border="3px solid"
+          borderColor="gray.200"
+          boxShadow="lg"
+        >
+          <Image src={"https://via.placeholder.com/150"} boxSize="100%" objectFit="cover" />
+        </Box>
+        <VStack align="flex-start" spacing={2} width={profileInfoWidth}>
+          <Text fontSize="2xl" fontWeight="bold">
+            {`${userDetail.first_name} ${userDetail.last_name}`}
+          </Text>
+          <Text fontSize="lg" color="gray.500">
+            {userDetail.username}
+          </Text>
+          <Button width="100%" colorScheme="teal" variant="solid" onClick={() => { }}>
+            Edit Profile
+          </Button>
+          <Divider orientation="horizontal" />
+        </VStack>
       </VStack>
-      
-    </VStack>
+    </Box>
   );
 };
 
