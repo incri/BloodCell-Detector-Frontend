@@ -1,32 +1,39 @@
-// components/Navbar.tsx
-import { HStack, Image } from "@chakra-ui/react";
+import { VStack, HStack, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import { useAuth } from "./authContext";
 import ProfileDrawer from "./ProfileDrawer";
+import NavLinks from "./NavLink";
 
 const Navbar = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
+  if (!user) return null; // Ensure user is defined before rendering
 
   return (
-    <>
-    <HStack justifyContent="space-between" padding={5} >
-      <Link to="/">
-        <Image src={Logo} boxSize="60px" />
-      </Link>
-      <HStack spacing={4}>
+    <VStack width="100%" align="flex-start" >
+      {/* Logo and Profile Drawer */}
+      <HStack justifyContent="space-between" width="100%" padding={2}>
+        <Link to="/">
+          <Image src={Logo} boxSize="60px" />
+        </Link>
         {isAuthenticated && (
           <ProfileDrawer
-          src="https://via.placeholder.com/50"
-          alt="Profile Image"
-        />
+            src="https://via.placeholder.com/50"
+            alt="Profile Image"
+          />
         )}
-        
       </HStack>
-    </HStack>
-    
-    </>
-    
+      {/* Navigation Links */}
+      <NavLinks
+        username={user.username}
+        links={[
+          { name: "Overview", path: "/" },
+          { name: "Hospitals", path: "?tab=hospitals" },
+          { name: "Users", path: "?tab=users" }
+        ]}
+      />
+    </VStack>
   );
 };
 

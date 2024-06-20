@@ -1,9 +1,14 @@
+// components/ProfileGrid.tsx
 import React, { useState } from 'react';
-import { Grid, GridItem, Box, useBreakpointValue } from '@chakra-ui/react';
+import { Grid, GridItem, Box, useBreakpointValue, VStack } from '@chakra-ui/react';
 import ProfileCard from './ProfileCard';
 import ProfileEditForm from './ProfileEditForm';
 
-const ProfileGrid: React.FC = () => {
+interface ProfileGridProps {
+  TabComponent: React.FC;
+}
+
+const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [userDetails, setUserDetails] = useState({
     firstName: '',
@@ -11,19 +16,17 @@ const ProfileGrid: React.FC = () => {
     email: ''
   });
 
-  // Determine the grid template columns based on the breakpoint
   const gridTemplateColumns = useBreakpointValue({
-    base: '1fr', // Single column for small and medium devices
-    lg: '2fr 3fr', // 2:3 ratio for large devices and up
+    base: '1fr',
+    lg: '2fr 3fr',
   });
 
-  const handleEdit = (details: { firstName: string; lastName: string; email:string}) => {
+  const handleEdit = (details: { firstName: string; lastName: string; email: string }) => {
     setUserDetails(details);
     setIsEditing(true);
   };
 
-  const handleSave = (details: { firstName: string; lastName: string; email : string}) => {
-    // Implement save logic here, if needed
+  const handleSave = (details: { firstName: string; lastName: string; email: string }) => {
     setUserDetails(details);
     setIsEditing(false);
   };
@@ -37,17 +40,24 @@ const ProfileGrid: React.FC = () => {
               onSave={handleSave}
               firstName={userDetails.firstName}
               lastName={userDetails.lastName}
-              email = {userDetails.email}
+              email={userDetails.email}
             />
           ) : (
             <ProfileCard onEdit={handleEdit} />
           )}
         </Box>
       </GridItem>
-      <GridItem display={{ base: 'none', lg: 'block' }}>
-        <Box bg="gray.200" p={4} borderRadius="md">
-          {/* Profile detail section content here */}
-          Profile Detail Section
+      <GridItem>
+        <Box p={4} borderRadius="md">
+          <VStack>
+
+        
+              
+            
+            <Box mt={4}>
+              <TabComponent />
+            </Box>
+          </VStack>
         </Box>
       </GridItem>
     </Grid>
