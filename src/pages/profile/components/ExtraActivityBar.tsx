@@ -13,14 +13,16 @@ import {
   InputGroup,
   InputRightElement,
   useBreakpointValue,
+  Icon
 } from '@chakra-ui/react';
 import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
+import { MdAddchart } from "react-icons/md";
 
 const ExtraActivityBar = () => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   return (
-    <Box p={4}  borderRadius="md" >
+    <Box p={4} borderRadius="md">
       {isLargeScreen ? (
         <Flex align="center" justify="space-between">
           {/* Search Bar */}
@@ -52,14 +54,14 @@ const ExtraActivityBar = () => {
           </Menu>
 
           {/* Button for Creating New Data */}
-          <Button colorScheme="teal" ml={4}>
+          <Button colorScheme="teal" ml={4} leftIcon={<Icon as={MdAddchart} />}>
             New
           </Button>
         </Flex>
       ) : (
         <VStack align="stretch" spacing={4}>
           {/* Button for Creating New Data */}
-          <Button colorScheme="teal" width="100%">
+          <Button colorScheme="teal" width="100%" leftIcon={<Icon as={MdAddchart} />}>
             New
           </Button>
 

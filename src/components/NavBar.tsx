@@ -4,6 +4,10 @@ import Logo from "../assets/Logo.png";
 import { useAuth } from "./authContext";
 import ProfileDrawer from "./ProfileDrawer";
 import NavLinks from "./NavLink";
+import { GrOverview } from "react-icons/gr";
+import { GiHospitalCross } from "react-icons/gi";
+import { FaUser } from "react-icons/fa";
+
 
 const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
@@ -28,9 +32,9 @@ const Navbar = () => {
       <NavLinks
         username={user.username}
         links={[
-          { name: "Overview", path: "/" },
-          { name: "Hospitals", path: "?tab=hospitals" },
-          { name: "Users", path: "?tab=users" }
+          { name: "Overview", path: "/", icon: GrOverview },
+          { name: "Hospitals", path: "?tab=hospitals", icon: GiHospitalCross },
+          { name: "Users", path: "?tab=users", icon : FaUser }
         ]}
       />
     </VStack>
