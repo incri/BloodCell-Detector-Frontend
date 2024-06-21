@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Grid, GridItem, Box, useBreakpointValue, VStack } from '@chakra-ui/react';
 import ProfileCard from './ProfileCard';
 import ProfileEditForm from './ProfileEditForm';
+import ExtraActivityBar from './ExtraActivityBar';
 
 interface ProfileGridProps {
   TabComponent: React.FC;
@@ -55,6 +56,8 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
               
             
             <Box mt={4}>
+            <ExtraActivityBar />
+
               <TabComponent />
             </Box>
           </VStack>

@@ -23,6 +23,7 @@ const NavLinks: React.FC<NavLinksProps> = ({ username, links }) => {
         return (
           <Box key={link.name} position="relative" padding={4} >
             <ChakraLink
+            
               as={Link}
               to={fullPath}
               fontWeight={isActive ? "bold" : "normal"}
