@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Input,
@@ -26,14 +25,14 @@ const ExtraActivityBar = () => {
       {isLargeScreen ? (
         <Flex align="center" justify="space-between">
           {/* Search Bar */}
-          <InputGroup maxW="400px" flex="1">
+          <InputGroup maxW="60%" flex="3">
             <Input placeholder="Search..." />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 
           {/* Dropdown for Sorting */}
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={4}>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={2} flex="1">
               Sort
             </MenuButton>
             <MenuList>
@@ -44,7 +43,7 @@ const ExtraActivityBar = () => {
 
           {/* Dropdown for Filtering */}
           <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={4}>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />} ml={2} flex="1">
               Filter
             </MenuButton>
             <MenuList>
@@ -54,7 +53,7 @@ const ExtraActivityBar = () => {
           </Menu>
 
           {/* Button for Creating New Data */}
-          <Button colorScheme="teal" ml={4} leftIcon={<Icon as={MdAddchart} />}>
+          <Button colorScheme="teal" ml={2} flex="1" leftIcon={<Icon as={MdAddchart} />}>
             New
           </Button>
         </Flex>
@@ -66,13 +65,13 @@ const ExtraActivityBar = () => {
           </Button>
 
           {/* Search Bar */}
-          <InputGroup>
+          <InputGroup maxW="100%">
             <Input placeholder="Search..." />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 
           {/* HStack for Sorting and Filtering */}
-          <HStack spacing={4} width="100%">
+          <HStack spacing={2} width="100%">
             {/* Dropdown for Sorting */}
             <Menu>
               <MenuButton as={Button} rightIcon={<ChevronDownIcon />} flex="1">

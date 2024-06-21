@@ -35,7 +35,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
   return (
     <Grid templateColumns={gridTemplateColumns} gap={4} p={4}>
       <GridItem>
-        <Box bg="transparent" p={4} borderRadius="md">
+        <Box p={4} borderRadius="md">
           {isEditing ? (
             <ProfileEditForm
               onSave={handleSave}
@@ -50,12 +50,8 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
       </GridItem>
       <GridItem>
         <Box p={4} borderRadius="md">
-          <VStack>
-
-        
-              
-            
-            <Box mt={4}>
+          <VStack width="100%" align="flex-start">
+            <Box mt={4} width={"100%"}>
             <ExtraActivityBar />
 
               <TabComponent />
