@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Input,
@@ -12,21 +13,27 @@ import {
   InputGroup,
   InputRightElement,
   useBreakpointValue,
-  Icon
+  Icon,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
-import { MdAddchart } from "react-icons/md";
+import { MdAddchart } from 'react-icons/md';
+import { ChangeEvent } from 'react'; // Import ChangeEvent from react
 
-const ExtraActivityBar = () => {
+interface ExtraActivityBarProps {
+  handleSearch: (event: ChangeEvent<HTMLInputElement>) => void; // Define handleSearch prop
+  searchQuery: string; // Define searchQuery prop
+}
+
+const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searchQuery }) => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   return (
-    <Box p={4} borderRadius="md">
+    <Box  borderRadius="md" width="100%">
       {isLargeScreen ? (
         <Flex align="center" justify="space-between">
           {/* Search Bar */}
           <InputGroup maxW="60%" flex="3">
-            <Input placeholder="Search..." />
+            <Input placeholder="Search..." value={searchQuery} onChange={handleSearch} />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 
@@ -66,7 +73,7 @@ const ExtraActivityBar = () => {
 
           {/* Search Bar */}
           <InputGroup maxW="100%">
-            <Input placeholder="Search..." />
+            <Input placeholder="Search..." value={searchQuery} onChange={handleSearch} />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 

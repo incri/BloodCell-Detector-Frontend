@@ -51,11 +51,8 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
       <GridItem>
         <Box p={4} borderRadius="md">
           <VStack width="100%" align="flex-start">
-            <Box mt={4} width={"100%"}>
-            <ExtraActivityBar />
 
               <TabComponent />
-            </Box>
           </VStack>
         </Box>
       </GridItem>
