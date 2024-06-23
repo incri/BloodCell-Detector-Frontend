@@ -1,14 +1,15 @@
 import React from 'react';
 import { Box, Text, Flex, Button } from '@chakra-ui/react';
 import { Hospital } from '../../registration/hooks/useHospital';
-import { FaHospital } from 'react-icons/fa'; // Importing the hospital icon
-import { AiOutlineEdit } from 'react-icons/ai'; // Importing the edit icon
+import { FaHospital } from 'react-icons/fa';
+import { AiOutlineEdit } from 'react-icons/ai';
 
 interface HospitalCardProps {
   hospital: Hospital;
+  onEdit: (hospital: Hospital) => void;
 }
 
-const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
+const HospitalCard: React.FC<HospitalCardProps> = ({ hospital, onEdit }) => {
   return (
     <Box
       maxW="sm"
@@ -16,7 +17,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
       borderRadius="lg"
       overflow="hidden"
       boxShadow="md"
-      position="relative" // Added position relative for absolute positioning of the edit button
+      position="relative"
     >
       <Button
         position="absolute"
@@ -26,12 +27,13 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital }) => {
         size="sm"
         colorScheme="teal"
         leftIcon={<AiOutlineEdit />}
+        onClick={() => onEdit(hospital)}
       >
         Edit
       </Button>
       <Box p="6">
         <Flex align="center">
-          <Box as={FaHospital} fontSize="2xl" color="teal.500" mr="2" /> {/* Hospital icon */}
+          <Box as={FaHospital} fontSize="2xl" color="teal.500" mr="2" />
           <Box
             color="gray.500"
             fontWeight="semibold"
