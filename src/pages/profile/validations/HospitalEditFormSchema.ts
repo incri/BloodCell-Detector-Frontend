@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const HospitalEditFormSchema = z.object({
+export const HospitalFormSchema = z.object({
   name: z
     .string()
     .nonempty("name is required"),
@@ -15,4 +15,4 @@ export const HospitalEditFormSchema = z.object({
     
 });
 
-export type HospitalEditData = z.infer<typeof HospitalEditFormSchema>;
+export type HospitalData = z.infer<typeof HospitalFormSchema>;
