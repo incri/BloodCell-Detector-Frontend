@@ -16,7 +16,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Hospital } from '../../registration/hooks/useHospital';
-import { HospitalEditFormSchema, HospitalEditData } from '../validations/HospitalEditFormSchema';
+import { HospitalFormSchema, HospitalData } from '../validations/HospitalEditFormSchema';
 import { useEditHospital } from '../hooks/useEditHospital';
 
 
@@ -27,8 +27,8 @@ interface EditHospitalModalProps {
 }
 
 const EditHospitalModal: React.FC<EditHospitalModalProps> = ({ isOpen, onClose, hospital }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<HospitalEditData>({
-    resolver: zodResolver(HospitalEditFormSchema),
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<HospitalData>({
+    resolver: zodResolver(HospitalFormSchema),
     defaultValues: {
       name: hospital?.name || '',
       address: hospital?.address || '',
@@ -50,7 +50,7 @@ const EditHospitalModal: React.FC<EditHospitalModalProps> = ({ isOpen, onClose, 
     }
   }, [hospital, reset]);
 
-  const onSubmit = async (data: HospitalEditData) => {
+  const onSubmit = async (data: HospitalData) => {
     if (hospital) {
       const response = await profileUser(hospital.id, data);
 

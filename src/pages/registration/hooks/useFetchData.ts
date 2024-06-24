@@ -7,7 +7,7 @@ interface FetchResponse<T> {
   results: T[];
 }
 
-const useFetchData = <T>(endpoint: string, query: string = "") => {
+const useFetchData = <T>(endpoint: string, query: string = "", sortField: string | null = null, sortOrder: 'asc' | 'desc' = 'asc') => {
   const [data, setData] = useState<T[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -15,8 +15,14 @@ const useFetchData = <T>(endpoint: string, query: string = "") => {
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
+
+    let url = `${endpoint}?search=${query}`;
+    if (sortField) {
+      url += `&ordering=${sortOrder === 'asc' ? '' : '-'}${sortField}`;
+    }
+
     apiClient
-      .get<FetchResponse<T>>(`${endpoint}?search=${query}`, { signal: controller.signal })
+      .get<FetchResponse<T>>(url, { signal: controller.signal })
       .then((res) => {
         setData(res.data.results);
         setLoading(false);
@@ -28,7 +34,7 @@ const useFetchData = <T>(endpoint: string, query: string = "") => {
       });
 
     return () => controller.abort();
-  }, [endpoint, query]);
+  }, [endpoint, query, sortField, sortOrder]);
 
   return { data, error, isLoading };
 };
