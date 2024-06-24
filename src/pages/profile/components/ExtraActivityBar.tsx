@@ -1,39 +1,26 @@
 import React from 'react';
-import {
-  Box,
-  Input,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Flex,
-  VStack,
-  HStack,
-  InputGroup,
-  InputRightElement,
-  useBreakpointValue,
-  Icon,
-} from '@chakra-ui/react';
+import { Box, Input, Button, Menu, MenuButton, MenuList, MenuItem, Flex, VStack, HStack, InputGroup, InputRightElement, useBreakpointValue, Icon } from '@chakra-ui/react';
 import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
-import { MdAddchart } from 'react-icons/md';
-import { ChangeEvent } from 'react'; // Import ChangeEvent from react
+import { MdAddchart } from "react-icons/md";
 
 interface ExtraActivityBarProps {
-  handleSearch: (event: ChangeEvent<HTMLInputElement>) => void; // Define handleSearch prop
-  searchQuery: string; // Define searchQuery prop
+  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  searchQuery: string;
+  handleSort: (field: string) => void;
+  sortField: string | null;
+  sortOrder: 'asc' | 'desc';
 }
 
-const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searchQuery }) => {
+const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searchQuery, handleSort, sortField, sortOrder }) => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   return (
-    <Box  borderRadius="md" width="100%">
+    <Box p={4} borderRadius="md">
       {isLargeScreen ? (
         <Flex align="center" justify="space-between">
           {/* Search Bar */}
           <InputGroup maxW="60%" flex="3">
-            <Input placeholder="Search..." value={searchQuery} onChange={handleSearch} />
+            <Input placeholder="Search..." onChange={handleSearch} value={searchQuery} />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 
@@ -43,8 +30,12 @@ const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searc
               Sort
             </MenuButton>
             <MenuList>
-              <MenuItem>Sort by Name</MenuItem>
-              <MenuItem>Sort by Date</MenuItem>
+              <MenuItem onClick={() => handleSort('name')}>
+                Sort by Name {sortField === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+              </MenuItem>
+              <MenuItem onClick={() => handleSort('date')}>
+                Sort by Date {sortField === 'date' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+              </MenuItem>
             </MenuList>
           </Menu>
 
@@ -73,7 +64,7 @@ const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searc
 
           {/* Search Bar */}
           <InputGroup maxW="100%">
-            <Input placeholder="Search..." value={searchQuery} onChange={handleSearch} />
+            <Input placeholder="Search..." onChange={handleSearch} value={searchQuery} />
             <InputRightElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
           </InputGroup>
 
@@ -85,8 +76,12 @@ const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searc
                 Sort
               </MenuButton>
               <MenuList>
-                <MenuItem>Sort by Name</MenuItem>
-                <MenuItem>Sort by Date</MenuItem>
+                <MenuItem onClick={() => handleSort('name')}>
+                  Sort by Name {sortField === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                </MenuItem>
+                <MenuItem onClick={() => handleSort('date')}>
+                  Sort by Date {sortField === 'date' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                </MenuItem>
               </MenuList>
             </Menu>
 
