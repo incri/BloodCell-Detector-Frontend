@@ -57,6 +57,7 @@ const HospitalDetailPage: React.FC = () => {
         sortField={sortField}
         sortOrder={sortOrder}
         onNewClick={handleOpenCreateModal}
+        sortableFields={['name']}
       />
 
       {error && (

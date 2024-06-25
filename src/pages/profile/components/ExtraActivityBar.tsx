@@ -3,16 +3,17 @@ import { Box, Input, Button, Menu, MenuButton, MenuList, MenuItem, Flex, VStack,
 import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
 import { MdAddchart } from "react-icons/md";
 
-interface ExtraActivityBarProps {
+interface ExtraActivityBarProps<T> {
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
   searchQuery: string;
-  handleSort: (field: string) => void;
-  sortField: string | null;
+  handleSort: (field: T) => void;
+  sortField: T | null;
   sortOrder: 'asc' | 'desc';
   onNewClick: () => void;
+  sortableFields: T[];
 }
 
-const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searchQuery, handleSort, sortField, sortOrder, onNewClick }) => {
+const ExtraActivityBar = <T,>({ handleSearch, searchQuery, handleSort, sortField, sortOrder, onNewClick, sortableFields }: ExtraActivityBarProps<T>) => {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
 
   return (
@@ -29,12 +30,11 @@ const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searc
               Sort
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => handleSort('name')}>
-                Sort by Name {sortField === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
-              </MenuItem>
-              <MenuItem onClick={() => handleSort('date')}>
-                Sort by Date {sortField === 'date' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
-              </MenuItem>
+              {sortableFields.map((field, index) => (
+                <MenuItem key={index} onClick={() => handleSort(field)}>
+                  Sort by {String(field)} {sortField === field ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                </MenuItem>
+              ))}
             </MenuList>
           </Menu>
 
@@ -69,12 +69,11 @@ const ExtraActivityBar: React.FC<ExtraActivityBarProps> = ({ handleSearch, searc
                 Sort
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={() => handleSort('name')}>
-                  Sort by Name {sortField === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
-                </MenuItem>
-                <MenuItem onClick={() => handleSort('date')}>
-                  Sort by Date {sortField === 'date' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
-                </MenuItem>
+                {sortableFields.map((field, index) => (
+                  <MenuItem key={index} onClick={() => handleSort(field)}>
+                    Sort by {String(field)} {sortField === field ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                  </MenuItem>
+                ))}
               </MenuList>
             </Menu>
 
