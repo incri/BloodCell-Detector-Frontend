@@ -27,13 +27,13 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: 'register', element: <RegistrationPage /> },
-      { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
-      { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
-      { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
       { path: ':username/', element: <ProfilePage /> }, // Note the trailing slash in the path
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
+  { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
+  { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
+  { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/not-authenticated', element: <NotAuthenticatedPage /> },
 ]);
