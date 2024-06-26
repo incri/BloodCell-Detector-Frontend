@@ -1,6 +1,6 @@
 import { useState } from "react";
-import apiClient from "../../../services/api-client";
 import axios, { AxiosError } from "axios";
+import apiClient from "../services/api-client";
 
 interface ApiResponse<T> {
   data?: T;
@@ -15,7 +15,7 @@ export const usePostData = () => {
 
   const fetchData = async <T>(
     url: string,
-    method: "PUT",
+    method: string,
     data?: any
   ): Promise<ApiResponse<T> | undefined> => {
     setLoading(true);

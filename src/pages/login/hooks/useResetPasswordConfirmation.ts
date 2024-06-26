@@ -1,4 +1,4 @@
-import { useData } from "./useData";
+import { usePostData } from "../../../hooks/usePostData";
 
 interface UserData {
   uid: string;
@@ -7,7 +7,7 @@ interface UserData {
 }
 
 export const useResetPasswordConfirmation = () => {
-  const { loading, error, fetchData } = useData();
+  const { loading, error, fetchData } = usePostData();
 
   const resetPasswordConfirmation = async (userData: UserData) => {
     return await fetchData<void>(

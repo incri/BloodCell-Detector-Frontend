@@ -1,4 +1,4 @@
-import { useData } from "./useData";
+import { usePostData } from "../../../hooks/usePostData";
 
 interface UserData {
   first_name: string;
@@ -11,7 +11,7 @@ interface UserData {
 }
 
 export const useRegister = () => {
-  const { loading, error, fetchData, response } = useData();
+  const { loading, error, fetchData, response } = usePostData();
 
   const registerUser = async (userData: UserData) => {
     return await fetchData<void>("/auth/users/", "POST", userData);

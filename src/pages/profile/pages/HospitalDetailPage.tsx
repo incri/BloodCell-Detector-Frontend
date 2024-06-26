@@ -70,7 +70,7 @@ const HospitalDetailPage: React.FC = () => {
         <Spinner />
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-          {data.map((hospital) => (
+          {data?.map((hospital) => (
             <HospitalCard key={hospital.id} hospital={hospital} onEdit={handleEdit} />
           ))}
         </SimpleGrid>

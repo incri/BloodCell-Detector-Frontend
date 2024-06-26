@@ -1,11 +1,11 @@
-import { useData } from "./useData";
+import { usePostData } from "../../../hooks/usePostData";
 
 interface UserData {
   email: string;
 }
 
 export const useResetPasswordEmail = () => {
-  const { loading, error, fetchData, response } = useData();
+  const { loading, error, fetchData, response } = usePostData();
 
   const resetPasswordEmail = async (userData: UserData) => {
     return await fetchData<void>(
