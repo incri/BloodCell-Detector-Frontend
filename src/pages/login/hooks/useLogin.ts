@@ -1,5 +1,5 @@
 import { useAuth } from "../../../components/authContext";
-import { useData } from "./useData";
+import { usePostData } from "../../../hooks/usePostData";
 
 interface UserData {
   username: string;
@@ -7,7 +7,7 @@ interface UserData {
 }
 
 export const useLogin = () => {
-  const { loading, error, fetchData, response } = useData();
+  const { loading, error, fetchData, response } = usePostData();
   const { login } = useAuth();
 
   const loginUser = async (userData: UserData) => {

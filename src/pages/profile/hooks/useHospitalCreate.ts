@@ -1,6 +1,6 @@
+import { usePostData } from "../../../hooks/usePostData";
 
 
-import { useData } from "../../registration/hooks/useData";
 
 interface HospitalData {
   name: string;
@@ -10,7 +10,7 @@ interface HospitalData {
 }
 
 export const useHospitalCreate = () => {
-  const { loading, error, fetchData, response } = useData();
+  const { loading, error, fetchData, response } = usePostData();
 
   const createHospital = async (hospitalData: HospitalData) => {
     return await fetchData<void>("/hospitals/", "POST", hospitalData);

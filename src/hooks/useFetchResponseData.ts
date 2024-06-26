@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { CanceledError } from "axios";
-import apiClient from "../../../services/api-client";
+import apiClient from "../services/api-client";
 
-const useFetchData = <T>(endpoint: string) => {
+const useFetchResponseData = <T>(endpoint: string) => {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -29,4 +29,4 @@ const useFetchData = <T>(endpoint: string) => {
   return { data, error, isLoading };
 };
 
-export default useFetchData;
+export default useFetchResponseData;

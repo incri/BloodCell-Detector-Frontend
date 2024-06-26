@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import useFetchData from "./useFetchData";
+import useFetchResponseData from "../../../hooks/useFetchResponseData";
 
 export interface User {
   id: UUID;
@@ -9,6 +9,6 @@ export interface User {
   last_name: string;
 }
 
-const useUserDetail = () => useFetchData<User>("/auth/users/me/");
+const useUserDetail = () => useFetchResponseData<User>("/auth/users/me/");
 
 export default useUserDetail;

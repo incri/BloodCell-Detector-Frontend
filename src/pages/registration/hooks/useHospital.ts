@@ -1,4 +1,4 @@
-import useFetchData from "./useFetchData";
+import useFetchData from "../../../hooks/useFetchData";
 
 export interface Hospital {
   id: string;

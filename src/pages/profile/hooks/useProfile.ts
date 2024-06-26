@@ -1,4 +1,4 @@
-import { usePostData } from "./usePostData";
+import { usePostData } from "../../../hooks/usePostData";
 
 interface UserData {
   first_name: string;
