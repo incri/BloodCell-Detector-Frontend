@@ -8,14 +8,27 @@ import { GrOverview } from "react-icons/gr";
 import { GiHospitalCross } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 
-
 const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
 
   if (!user) return null; // Ensure user is defined before rendering
 
+  // Define the base links
+  const baseLinks = [
+    { name: "Overview", path: "/", icon: GrOverview }
+  ];
+
+  // Define the authenticated-only links
+  const adminLinks = [
+    { name: "Hospitals", path: "?tab=hospitals", icon: GiHospitalCross },
+    { name: "Users", path: "?tab=users", icon: FaUser }
+  ];
+
+  // Combine the links based on authentication status
+  const links = user.is_superuser || user.is_hospital_admin ? [...baseLinks, ...adminLinks] : baseLinks;
+
   return (
-    <VStack width="100%" align="flex-start" >
+    <VStack width="100%" align="flex-start">
       {/* Logo and Profile Drawer */}
       <HStack justifyContent="space-between" width="100%" padding={2}>
         <Link to="/">
@@ -31,11 +44,7 @@ const Navbar = () => {
       {/* Navigation Links */}
       <NavLinks
         username={user.username}
-        links={[
-          { name: "Overview", path: "/", icon: GrOverview },
-          { name: "Hospitals", path: "?tab=hospitals", icon: GiHospitalCross },
-          { name: "Users", path: "?tab=users", icon : FaUser }
-        ]}
+        links={links}
       />
     </VStack>
   );
