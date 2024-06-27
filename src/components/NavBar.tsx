@@ -15,7 +15,8 @@ const Navbar = () => {
 
   // Define the base links
   const baseLinks = [
-    { name: "Overview", path: "/", icon: GrOverview }
+    { name: "Overview", path: "/", icon: GrOverview },
+    {name: "Patients", path: "?tab=patients", icon: FaUser}
   ];
 
   // Define the authenticated-only links

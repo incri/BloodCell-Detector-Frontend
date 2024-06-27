@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Box, Spinner, Alert, AlertIcon, SimpleGrid } from '@chakra-ui/react';
 import PatientCard from '../components/PatientCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
-import usePatients from '../hooks/usePatients';
-
+import usePatients, { PatientData } from '../hooks/usePatients';
 
 const PatientDetailPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,9 +11,9 @@ const PatientDetailPage: React.FC = () => {
   const { data, error, isLoading } = usePatients(searchQuery, sortField, sortOrder);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<PatientData | null>(null);
 
-  const handleEdit = (patient: Patient) => {
+  const handleEdit = (patient: PatientData) => {
     setSelectedPatient(patient);
     setIsEditModalOpen(true);
   };
