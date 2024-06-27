@@ -1,27 +1,30 @@
+// src/pages/HospitalDetailPage.tsx
+
 import React, { useState } from 'react';
 import { Box, Spinner, Alert, AlertIcon, SimpleGrid } from '@chakra-ui/react';
-import PatientCard from '../components/PatientCard';
+import useHospital, { Hospital } from '../../registration/hooks/useHospital';
+import HospitalCard from '../components/HospitalCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
-import usePatients from '../hooks/usePatients';
+import CreateHospitalModal from '../components/CreateHospitalModal';
+import EditHospitalModal from '../components/EditHospitalModel';
 
-
-const PatientDetailPage: React.FC = () => {
+const HospitalDetailPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const { data, error, isLoading } = usePatients(searchQuery, sortField, sortOrder);
+  const { data, error, isLoading } = useHospital(searchQuery, sortField, sortOrder);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
 
-  const handleEdit = (patient: Patient) => {
-    setSelectedPatient(patient);
+  const handleEdit = (hospital: Hospital) => {
+    setSelectedHospital(hospital);
     setIsEditModalOpen(true);
   };
 
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
-    setSelectedPatient(null);
+    setSelectedHospital(null);
   };
 
   const handleOpenCreateModal = () => {
@@ -54,7 +57,7 @@ const PatientDetailPage: React.FC = () => {
         sortField={sortField}
         sortOrder={sortOrder}
         onNewClick={handleOpenCreateModal}
-        sortableFields={['first_name', 'last_name']}
+        sortableFields={['name']}
       />
 
       {error && (
@@ -67,16 +70,16 @@ const PatientDetailPage: React.FC = () => {
         <Spinner />
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-          {data?.map((patient) => (
-            <PatientCard key={patient.id} patient={patient} onEdit={handleEdit} />
+          {data?.map((hospital) => (
+            <HospitalCard key={hospital.id} hospital={hospital} onEdit={handleEdit} />
           ))}
         </SimpleGrid>
       )}
 
-      {/* <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} />
-      <CreatePatientModal isOpen={isCreateModalOpen} onClose={handleCloseCreateModal} /> */}
+      <EditHospitalModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} hospital={selectedHospital} />
+      <CreateHospitalModal isOpen={isCreateModalOpen} onClose={handleCloseCreateModal} />
     </Box>
   );
 };
 
-export default PatientDetailPage;
+export default HospitalDetailPage;
