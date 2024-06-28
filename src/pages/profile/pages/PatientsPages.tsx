@@ -4,7 +4,7 @@ import PatientCard from '../components/PatientCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
 import usePatients, { PatientData } from '../hooks/usePatients';
 
-const PatientDetailPage: React.FC = () => {
+const PatientsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -78,4 +78,4 @@ const PatientDetailPage: React.FC = () => {
   );
 };
 
-export default PatientDetailPage;
+export default PatientsPage;

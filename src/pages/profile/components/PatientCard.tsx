@@ -1,9 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Text, Flex, Button } from '@chakra-ui/react';
 import { FaUser } from 'react-icons/fa';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { PatientData } from '../hooks/usePatients';
-
 
 interface PatientCardProps {
   patient: PatientData;
@@ -11,6 +11,12 @@ interface PatientCardProps {
 }
 
 const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/patient/${patient.id}`);
+  };
+
   return (
     <Box
       maxW="sm"
@@ -19,6 +25,8 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
       overflow="hidden"
       boxShadow="md"
       position="relative"
+      onClick={handleCardClick}
+      cursor="pointer"
     >
       <Button
         position="absolute"
@@ -28,7 +36,10 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
         size="sm"
         colorScheme="teal"
         leftIcon={<AiOutlineEdit />}
-        onClick={() => onEdit(patient)}
+        onClick={(e) => { 
+          e.stopPropagation();
+          onEdit(patient);
+        }}
       >
         Edit
       </Button>

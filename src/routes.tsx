@@ -13,6 +13,7 @@ import NotAuthenticatedPage from './pages/NotAuthenticatedPage';
 import ProtectedRoute from './protectedRoutes';
 import { AuthProvider } from './components/authContext';
 import ProfilePage from './pages/profile/pages/ProfilePage';
+import PatientsDetailPage from './pages/profile/pages/PatientsDetailPage';
 
 
 const router = createBrowserRouter([
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: 'register', element: <RegistrationPage /> },
-      { path: ':username/', element: <ProfilePage /> }, // Note the trailing slash in the path
+      { path: ':username/', element: <ProfilePage /> },
+      { path: 'patient/:id', element: <PatientsDetailPage /> },
+
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
