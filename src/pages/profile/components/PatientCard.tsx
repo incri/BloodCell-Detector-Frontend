@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Text, Flex, Button } from '@chakra-ui/react';
+import { Box, Text, Flex, Button, VStack, HStack } from '@chakra-ui/react';
 import { FaUser } from 'react-icons/fa';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { PatientData } from '../hooks/usePatients';
@@ -19,7 +19,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
 
   return (
     <Box
-      maxW="sm"
+      width="100%"
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
@@ -27,6 +27,8 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
       position="relative"
       onClick={handleCardClick}
       cursor="pointer"
+      p="6"
+      _hover={{ boxShadow: "lg" }}
     >
       <Button
         position="absolute"
@@ -43,7 +45,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
       >
         Edit
       </Button>
-      <Box p="6">
+      <VStack align="start" spacing={2}>
         <Flex align="center">
           <Box as={FaUser} fontSize="2xl" color="teal.500" mr="2" />
           <Box
@@ -56,13 +58,30 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
           >
             {patient.address.street}, {patient.address.city}
           </Box>
+
+          
+          
         </Flex>
 
-        <Box mt="1" fontWeight="bold" as="h4" lineHeight="tight" isTruncated>
+        <HStack justifyContent={'space-between'} width={"100%"}>
+
+        <Box fontWeight="bold" as="h4" lineHeight="tight" isTruncated>
           {patient.first_name} {patient.last_name}
         </Box>
 
-        <Flex align="center" mt={2}>
+        
+        
+
+        <Box fontSize="sm" color="gray.500">
+          Birth Date: {patient.birth_date}
+        </Box>
+
+
+        </HStack>
+
+        
+
+        <Flex align="center">
           <Text fontSize="sm" color="gray.600">
             {patient.phone}
           </Text>
@@ -70,11 +89,7 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
             {patient.email}
           </Box>
         </Flex>
-
-        <Box mt={2} fontSize="sm" color="gray.500">
-          Birth Date: {patient.birth_date}
-        </Box>
-      </Box>
+      </VStack>
     </Box>
   );
 };

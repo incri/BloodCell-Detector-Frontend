@@ -23,7 +23,7 @@ interface Result {
     bloodtest: string;
   }
   
-interface BloodTest {
+export interface BloodTest {
     id: string;
     title: string;
     description: string;
