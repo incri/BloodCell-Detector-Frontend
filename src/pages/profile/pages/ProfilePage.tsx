@@ -5,7 +5,7 @@ import ProfileGrid from '../components/ProfileGrid';
 import ProfileDetailPage from './ProfileDetailPage';
 import HospitalDetailPage from './HospitalDetailPage';
 import UsersDetailPage from './UsersDetailPage';
-import PatientsPages from './PatientsPages';
+import PatientsPage from './PatientsPages';
 
 const ProfilePage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -20,7 +20,7 @@ const ProfilePage: React.FC = () => {
       TabComponent = UsersDetailPage;
       break;
     case 'patients':
-      TabComponent = PatientsPages;
+      TabComponent = PatientsPage;
       break;
     case '':
     default:
