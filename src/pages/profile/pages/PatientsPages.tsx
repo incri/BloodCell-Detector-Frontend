@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Spinner, Alert, AlertIcon, SimpleGrid } from '@chakra-ui/react';
+import { Box, Spinner, Alert, AlertIcon, VStack } from '@chakra-ui/react';
 import PatientCard from '../components/PatientCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
 import usePatients, { PatientData } from '../hooks/usePatients';
@@ -45,7 +45,7 @@ const PatientsPage: React.FC = () => {
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} width="70%">
       <ExtraActivityBar
         handleSearch={handleSearch}
         searchQuery={searchQuery}
@@ -65,11 +65,11 @@ const PatientsPage: React.FC = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+        <VStack spacing={4} width="100%">
           {data?.map((patient) => (
             <PatientCard key={patient.id} patient={patient} onEdit={handleEdit} />
           ))}
-        </SimpleGrid>
+        </VStack>
       )}
 
       {/* <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} />

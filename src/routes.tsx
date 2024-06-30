@@ -14,6 +14,7 @@ import ProtectedRoute from './protectedRoutes';
 import { AuthProvider } from './components/authContext';
 import ProfilePage from './pages/profile/pages/ProfilePage';
 import PatientsDetailPage from './pages/profile/pages/PatientsDetailPage';
+import BloodTestDetailPage from './pages/profile/pages/BloodTestDetailPage';
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,8 @@ const router = createBrowserRouter([
       { path: 'register', element: <RegistrationPage /> },
       { path: ':username/', element: <ProfilePage /> },
       { path: 'patient/:id', element: <PatientsDetailPage /> },
+      {path: "/patients/:patientId/blood-test/:bloodTestId" , element:< BloodTestDetailPage />}
+
 
     ],
   },
