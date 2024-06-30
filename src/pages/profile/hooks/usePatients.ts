@@ -8,7 +8,7 @@ interface Address {
     patient: string;
   }
   
-interface Image {
+export interface ImageData {
     id: number;
     image: string;
     blood_test?: string;
@@ -19,7 +19,7 @@ interface Result {
     id: string;
     created_at: string;
     description: string;
-    result_images: Image[];
+    result_images: ImageData[];
     bloodtest: string;
   }
   
@@ -27,7 +27,7 @@ export interface BloodTest {
     id: string;
     title: string;
     description: string;
-    images: Image[];
+    images: ImageData[];
     results: Result[];
     patient: string;
   }
