@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex } from '@chakra-ui/react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
-import { BloodTest, ImageData } from '../hooks/usePatients';
+import { BloodTest, ImageData, Result } from '../hooks/usePatients';
+import { FaImage } from 'react-icons/fa';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -18,9 +19,9 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
     setFiles([...files, ...acceptedFiles]);
   }, [files]);
 
-  const accept: Accept = {
+  const accept: Accept = useMemo(() => ({
     'image/*': ['.jpeg', '.jpg', '.png', '.gif']
-  };
+  }), []);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept,
@@ -34,6 +35,46 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
 
   const handleClear = () => {
     setFiles([]);
+  };
+
+  const renderAlbum = (images: ImageData[]) => {
+    const previewImages = images.slice(0, 3); 
+    const extraImagesCount = images.length - previewImages.length;
+
+    return (
+      <Box position="relative" overflow="hidden" boxShadow="sm" width="200px" height="220px">
+        {previewImages.map((image, index) => (
+          <Box
+            key={image.id}
+            position="absolute"
+            top={`${index * 10}px`}
+            left={`${index * 10}px`}
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            boxShadow="sm"
+            transform={`rotate(${index * 5}deg)`}
+          >
+            <Image src={image.image} alt={`Result image ${image.id}`} width="160px" height="180px" objectFit="cover" />
+          </Box>
+        ))}
+        {extraImagesCount > 0 && (
+          <Badge
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            borderRadius="full"
+            px="4"
+            py="2"
+            fontSize="md"
+            colorScheme="blue"
+          >
+            +{extraImagesCount}
+          </Badge>
+        )}
+      </Box>
+    );
   };
 
   if (!bloodTest) {
@@ -61,7 +102,37 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
               <Text>No images uploaded</Text>
             )}
           </Box>
+
+          {/* Result Section */}
+          <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
+            <Heading as="h3" size="md" mb={4}>
+              Results
+            </Heading>
+            <Divider mb={4} />
+            {bloodTest.results.length > 0 ? (
+              <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
+                {bloodTest.results.map((result: Result) => (
+                  <Box key={result.id} mb={4} borderWidth="1px" borderRadius="lg" p={4} boxShadow="sm">
+                    <Text mb={2}><strong>ID:</strong> {result.id}</Text>
+                    {result.result_images.length > 0 ? (
+                      <Flex justifyContent="center">
+                        {renderAlbum(result.result_images)}
+                      </Flex>
+                    ) : (
+                      <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
+                        <FaImage size="50px" color="gray" />
+                        <Text>No images available</Text>
+                      </Flex>
+                    )}
+                  </Box>
+                ))}
+              </SimpleGrid>
+            ) : (
+              <Text>No results available</Text>
+            )}
+          </Box>
         </Box>
+
         <Box flex="3" ml={4}>
           <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
             <Heading as="h3" size="md" mb={4}>

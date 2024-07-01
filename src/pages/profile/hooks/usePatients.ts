@@ -15,7 +15,7 @@ export interface ImageData {
     result?: string;
   }
   
-interface Result {
+export interface Result {
     id: string;
     created_at: string;
     description: string;
