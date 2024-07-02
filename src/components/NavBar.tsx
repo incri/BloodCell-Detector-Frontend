@@ -16,6 +16,10 @@ const Navbar = () => {
   // Define the base links
   const baseLinks = [
     { name: "Overview", path: "/", icon: GrOverview },
+  ];
+
+
+  const hospitalLinks = [
     {name: "Patients", path: "?tab=patients", icon: FaUser}
   ];
 
@@ -26,7 +30,11 @@ const Navbar = () => {
   ];
 
   // Combine the links based on authentication status
-  const links = user.is_superuser || user.is_hospital_admin ? [...baseLinks, ...adminLinks] : baseLinks;
+  const links = user.is_superuser
+  ? [...baseLinks, ...adminLinks]
+  : user.is_hospital_admin
+  ? [...baseLinks, ...adminLinks, ...hospitalLinks]
+  : [...baseLinks, ...hospitalLinks];
 
   return (
     <VStack width="100%" align="flex-start">

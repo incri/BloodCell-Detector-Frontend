@@ -55,8 +55,8 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
             fontSize="xs"
             textTransform="uppercase"
             flex="1"
-          >
-            {patient.address.street}, {patient.address.city}
+>
+            {patient.address ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
           </Box>
 
           
