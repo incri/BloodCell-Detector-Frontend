@@ -3,6 +3,7 @@ import { Box, Spinner, Alert, AlertIcon, VStack } from '@chakra-ui/react';
 import PatientCard from '../components/PatientCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
 import usePatients, { PatientData } from '../hooks/usePatients';
+import { useNavigate } from 'react-router-dom';
 
 const PatientsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,8 +11,9 @@ const PatientsPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const { data, error, isLoading } = usePatients(searchQuery, sortField, sortOrder);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<PatientData | null>(null);
+  const navigate = useNavigate();
+
 
   const handleEdit = (patient: PatientData) => {
     setSelectedPatient(patient);
@@ -21,14 +23,6 @@ const PatientsPage: React.FC = () => {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedPatient(null);
-  };
-
-  const handleOpenCreateModal = () => {
-    setIsCreateModalOpen(true);
-  };
-
-  const handleCloseCreateModal = () => {
-    setIsCreateModalOpen(false);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +38,12 @@ const PatientsPage: React.FC = () => {
     }
   };
 
+  const handleNewPatient = () => {
+    navigate('/patient-register');
+  };
+
+
+
   return (
     <Box p={4} width="70%">
       <ExtraActivityBar
@@ -52,7 +52,7 @@ const PatientsPage: React.FC = () => {
         handleSort={handleSort}
         sortField={sortField}
         sortOrder={sortOrder}
-        onNewClick={handleOpenCreateModal}
+        onNewClick={handleNewPatient}
         sortableFields={['first_name', 'last_name']}
       />
 
@@ -72,8 +72,7 @@ const PatientsPage: React.FC = () => {
         </VStack>
       )}
 
-      {/* <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} />
-      <CreatePatientModal isOpen={isCreateModalOpen} onClose={handleCloseCreateModal} /> */}
+      {/* <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} /> */}
     </Box>
   );
 };
