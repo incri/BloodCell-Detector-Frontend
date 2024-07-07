@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -43,7 +43,7 @@ const PatientRegistrationForm: React.FC = () => {
         if (!result) {
             console.log("Registration failed.");
         } else {
-            navigate("/");
+          navigate(`/${user.username}?tab=patients`);
         }
     }
 };
