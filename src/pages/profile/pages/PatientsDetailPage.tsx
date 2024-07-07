@@ -1,13 +1,17 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Text, Flex, Spinner, Alert, AlertIcon, VStack, Grid, GridItem, Icon, IconButton, Divider } from '@chakra-ui/react';
+import { Box, Text, Flex, Spinner, Alert, AlertIcon, VStack, Grid, GridItem, Icon, IconButton, Divider, Button, useDisclosure } from '@chakra-ui/react';
 import { FaEnvelope, FaPhone, FaBirthdayCake, FaHome, FaUser, FaEdit } from 'react-icons/fa';
 import usePatientDetail from '../hooks/usePatientsDetail';
 import BloodTestCard from '../components/BloodTestCard';
+import { MdAddchart } from 'react-icons/md';
+import AddBloodTestModal from '../components/AddBloodTestModal';
 
 const PatientsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: patient, error, isLoading } = usePatientDetail(id!);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
 
   if (isLoading) return <Spinner />;
   if (error) return (
@@ -76,7 +80,23 @@ const PatientsDetailPage: React.FC = () => {
         borderRadius="lg"
         boxShadow="md"
       >
+        <Flex width={"100%"} justifyContent={'space-between'}>
+
         <Text fontSize="lg" fontWeight="bold" mb={4}>Blood Tests</Text>
+        <Button
+            colorScheme="teal"
+            ml={2}
+            leftIcon={<Icon as={MdAddchart} />}
+            onClick={onOpen}
+          >
+            New
+          </Button>
+
+          
+
+
+        </Flex>
+        
         {patient.blood_tests.length === 0 ? (
           <Text>No blood tests available</Text>
         ) : (
@@ -87,6 +107,8 @@ const PatientsDetailPage: React.FC = () => {
           </VStack>
         )}
       </Box>
+      <AddBloodTestModal isOpen={isOpen} onClose={onClose} patient={patient} />
+
     </Box>
   );
 };
