@@ -1,6 +1,6 @@
 import { useUserPostData } from "../../../hooks/useUserPostData";
 
-interface PatientData {
+export interface PatientDataRegister {
   first_name: string;
   last_name: string;
   email: string;
@@ -12,7 +12,7 @@ interface PatientData {
 export const usePatientRegister = () => {
   const { loading, error, fetchData, response } = useUserPostData();
 
-  const registerPatient = async (patientData: PatientData) => {
+  const registerPatient = async (patientData: PatientDataRegister) => {
     return await fetchData<void>("patients/", "POST", patientData);
   };
 

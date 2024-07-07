@@ -4,6 +4,7 @@ import PatientCard from '../components/PatientCard';
 import ExtraActivityBar from '../components/ExtraActivityBar';
 import usePatients, { PatientData } from '../hooks/usePatients';
 import { useNavigate } from 'react-router-dom';
+import EditPatientModal from '../components/EditPatientModel';
 
 const PatientsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,7 +73,7 @@ const PatientsPage: React.FC = () => {
         </VStack>
       )}
 
-      {/* <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} /> */}
+      <EditPatientModal isOpen={isEditModalOpen} onClose={handleCloseEditModal} patient={selectedPatient} />
     </Box>
   );
 };
