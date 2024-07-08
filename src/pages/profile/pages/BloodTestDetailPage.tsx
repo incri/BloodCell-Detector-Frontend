@@ -2,8 +2,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
-import { BloodTest, ImageData, Result } from '../hooks/usePatients';
 import { FaImage } from 'react-icons/fa';
+import { BloodTest, ImageData, Result } from '../hooks/usePatients';
+import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -14,13 +15,14 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   const { patientId, bloodTest } = location.state || {};
 
   const [files, setFiles] = useState<File[]>([]);
+  const { profileBloodTestImageData, loading, error } = useAddBloodTestImageData(); // Use the custom hook
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
   }, [files]);
 
   const accept: Accept = useMemo(() => ({
-    'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+    'image/*': ['.jpeg', '.jpg', '.png']
   }), []);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -28,9 +30,19 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
     onDrop,
   });
 
-  const handleUpload = () => {
-    // Handle the upload logic here
-    console.log('Files to upload:', files);
+  const handleUpload = async () => {
+    if (!bloodTest || !patientId) return;
+
+    const formData = new FormData();
+    files.forEach(file => formData.append('image', file));
+
+    try {
+      await profileBloodTestImageData(patientId, bloodTest.id, formData); // Pass the formData to the hook
+      console.log('Files uploaded successfully');
+      setFiles([]); // Clear files after successful upload
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
   };
 
   const handleClear = () => {
@@ -38,7 +50,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   };
 
   const renderAlbum = (images: ImageData[]) => {
-    const previewImages = images.slice(0, 3); 
+    const previewImages = images.slice(0, 3);
     const extraImagesCount = images.length - previewImages.length;
 
     return (
@@ -151,13 +163,14 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
               ))}
             </SimpleGrid>
             <Flex mt={4}>
-              <Button colorScheme="blue" onClick={handleUpload} mr={2}>
+              <Button colorScheme="blue" onClick={handleUpload} mr={2} isLoading={loading}>
                 Upload Images
               </Button>
               <Button colorScheme="red" onClick={handleClear}>
                 Clear
               </Button>
             </Flex>
+            {error && <Text color="red.500" mt={2}>{error}</Text>}
           </Box>
         </Box>
       </Flex>
