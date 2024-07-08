@@ -14,11 +14,11 @@ export const useUserPostData = () => {
   const [response, setResponse] = useState<ApiResponse<any> | null>(null);
   const apiClientUser = useApiClientUser();
 
-
   const fetchData = async <T>(
     url: string,
     method: string,
-    data?: any
+    data?: any,
+    headers?: { [key: string]: string }
   ): Promise<ApiResponse<T> | undefined> => {
     setLoading(true);
     setError("");
@@ -29,6 +29,7 @@ export const useUserPostData = () => {
         url,
         method,
         data,
+        headers,
       });
 
       setLoading(false);
