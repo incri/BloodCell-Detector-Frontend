@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge, Icon, IconButton, Grid, GridItem } from '@chakra-ui/react';
+import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge, Icon, IconButton } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
 import { FaEdit, FaImage, FaNotesMedical } from 'react-icons/fa';
 import { BloodTest, ImageData, Result } from '../hooks/usePatients';
 import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 import { MdBloodtype } from 'react-icons/md';
+import EditBloodTestModal from '../components/EditBloodTestModal';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -17,6 +18,8 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
 
   const [files, setFiles] = useState<File[]>([]);
   const { profileBloodTestImageData, loading, error } = useAddBloodTestImageData(); // Use the custom hook
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
@@ -101,9 +104,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
         borderRadius="lg"
         mb={4}
       >
-
-
-<Flex align="center" mb={4}>
+        <Flex align="center" mb={4}>
           <Icon as={MdBloodtype} fontSize="2xl" color="teal.500" mr={2} />
           <Text fontSize="2xl" fontWeight="bold" mr={2}>{bloodTest.title}</Text>
           <IconButton
@@ -112,14 +113,14 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
             colorScheme="teal"
             variant="ghost"
             size="sm"
-            onClick={() => {/* Handle edit action here */}}
+            onClick={() => setIsEditModalOpen(true)} // Open the modal
           />
         </Flex>
-            <Flex align="center">
-              <Text fontSize="lg">{bloodTest.description}</Text>
-            </Flex>
+        <Flex align="center">
+          <Text fontSize="lg">{bloodTest.description}</Text>
+        </Flex>
+      </Box>
 
-            </Box>
       <Flex>
         <Box flex="7">
           <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
@@ -199,6 +200,13 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
           </Box>
         </Box>
       </Flex>
+
+      <EditBloodTestModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        patient_id={ patientId } // Pass the patient data
+        blood_test={bloodTest}
+      />
     </Box>
   );
 };
