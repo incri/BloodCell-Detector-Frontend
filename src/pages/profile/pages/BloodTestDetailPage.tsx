@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge } from '@chakra-ui/react';
+import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, Badge, Icon, IconButton, Grid, GridItem } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
-import { FaImage } from 'react-icons/fa';
+import { FaEdit, FaImage, FaNotesMedical } from 'react-icons/fa';
 import { BloodTest, ImageData, Result } from '../hooks/usePatients';
 import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
+import { MdBloodtype } from 'react-icons/md';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -95,6 +96,30 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
 
   return (
     <Box p={4} mx="15%">
+      <Box
+        p={6}
+        borderRadius="lg"
+        mb={4}
+      >
+
+
+<Flex align="center" mb={4}>
+          <Icon as={MdBloodtype} fontSize="2xl" color="teal.500" mr={2} />
+          <Text fontSize="2xl" fontWeight="bold" mr={2}>{bloodTest.title}</Text>
+          <IconButton
+            aria-label="Edit patient"
+            icon={<FaEdit />}
+            colorScheme="teal"
+            variant="ghost"
+            size="sm"
+            onClick={() => {/* Handle edit action here */}}
+          />
+        </Flex>
+            <Flex align="center">
+              <Text fontSize="lg">{bloodTest.description}</Text>
+            </Flex>
+
+            </Box>
       <Flex>
         <Box flex="7">
           <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
