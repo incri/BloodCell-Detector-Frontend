@@ -2,13 +2,14 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, IconButton, Icon, Badge } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
-import { FaEdit, FaImage, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaImage, FaPlay, FaTrashAlt } from 'react-icons/fa';
 import { MdBloodtype } from 'react-icons/md';
 import { BloodTest, ImageData, Result } from '../hooks/usePatients';
 import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 import EditBloodTestModal from '../components/EditBloodTestModal';
 import { useEditBloodTestImageData } from '../hooks/useEditBloodTestImageData';
 import { useNavigate } from 'react-router-dom';
+import { useImageProcess } from '../hooks/useImageProcess';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -27,6 +28,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   const [editedImages, setEditedImages] = useState<ImageData[]>(bloodTest?.images || []);
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const navigate = useNavigate();
+  const { loading: processDataLoading, sendProcess } = useImageProcess();
 
   const handleResultClick = (result: Result) => {
     navigate(`/patients/${patientId}/blood-test/${bloodTest.id}/result-detail`, { state: { result } });
@@ -283,8 +285,25 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
               </Box>
             )}
           </Box>
+          <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
+            <Heading as="h3" size="md" mb={4}>
+              Process Dataset
+            </Heading>
+            <Divider mb={4} />
+            <Button
+              colorScheme="teal"
+              onClick={() => sendProcess(patientId, bloodTest?.id)}
+              leftIcon={<FaPlay />}
+              isLoading={processDataLoading}
+              loadingText="Processing"
+            >
+              Process Dataset
+            </Button>
+          </Box>
         </Box>
       </Flex>
+
+      
 
       <EditBloodTestModal
         isOpen={isEditModalOpen}
