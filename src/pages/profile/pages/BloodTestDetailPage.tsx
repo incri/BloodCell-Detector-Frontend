@@ -8,6 +8,7 @@ import { BloodTest, ImageData, Result } from '../hooks/usePatients';
 import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 import EditBloodTestModal from '../components/EditBloodTestModal';
 import { useEditBloodTestImageData } from '../hooks/useEditBloodTestImageData';
+import { useNavigate } from 'react-router-dom';
 
 interface BloodTestDetailPageProps {
   test?: BloodTest;
@@ -25,6 +26,11 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedImages, setEditedImages] = useState<ImageData[]>(bloodTest?.images || []);
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+  const navigate = useNavigate();
+
+  const handleResultClick = (result: Result) => {
+    navigate(`/patients/${patientId}/blood-test/${bloodTest.id}/result-detail`, { state: { result } });
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
@@ -215,20 +221,29 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
             {bloodTest.results.length > 0 ? (
               <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
                 {bloodTest.results.map((result: Result) => (
-                  <Box key={result.id} mb={4} borderWidth="1px" borderRadius="lg" p={4} boxShadow="sm">
-                    <Text mb={2}><strong>ID:</strong> {result.id}</Text>
-                    {result.result_images.length > 0 ? (
-                      <Flex justifyContent="center">
-                        {renderAlbum(result.result_images)}
-                      </Flex>
-                    ) : (
-                      <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
-                        <FaImage size="50px" color="gray" />
-                        <Text>No images available</Text>
-                      </Flex>
-                    )}
-                  </Box>
-                ))}
+                <Box
+                  key={result.id}
+                  mb={4}
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  p={4}
+                  boxShadow="sm"
+                  cursor="pointer"
+                  onClick={() => handleResultClick(result)}
+                >
+                  <Text mb={2}><strong>ID:</strong> {result.id}</Text>
+                  {result.result_images.length > 0 ? (
+                    <Flex justifyContent="center">
+                      {renderAlbum(result.result_images)}
+                    </Flex>
+                  ) : (
+                    <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
+                      <FaImage size="50px" color="gray" />
+                      <Text>No images available</Text>
+                    </Flex>
+                  )}
+                </Box>
+              ))}
               </SimpleGrid>
             ) : (
               <Text>No results available</Text>

@@ -16,6 +16,7 @@ import ProfilePage from './pages/profile/pages/ProfilePage';
 import PatientsDetailPage from './pages/profile/pages/PatientsDetailPage';
 import BloodTestDetailPage from './pages/profile/pages/BloodTestDetailPage';
 import PatientsRegistrationPage from './pages/profile/pages/PatientRegistrationPage';
+import BloodTestResultDetailPage from './pages/profile/pages/BloodTestResultDetailPage';
 
 
 const router = createBrowserRouter([
@@ -33,7 +34,8 @@ const router = createBrowserRouter([
       { path: 'patient-register', element: <PatientsRegistrationPage /> },
       { path: ':username/', element: <ProfilePage /> },
       { path: 'patient/:id', element: <PatientsDetailPage /> },
-      {path: "/patients/:patientId/blood-test/:bloodTestId" , element:< BloodTestDetailPage />}
+      {path: "/patients/:patientId/blood-test/:bloodTestId" , element:< BloodTestDetailPage />},
+      {path: "/patients/:patientId/blood-test/:bloodTestId/result-detail" , element:< BloodTestResultDetailPage />}
 
 
     ],
