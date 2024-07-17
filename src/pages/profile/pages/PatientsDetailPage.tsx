@@ -102,7 +102,7 @@ const PatientsDetailPage: React.FC = () => {
         ) : (
           <VStack spacing={4} width="100%">
             {patient.blood_tests.map((test) => (
-              <BloodTestCard key={test.id} test={test} patientId={patient.id} />
+              <BloodTestCard key={test.id} test={test} patient={patient} />
             ))}
           </VStack>
         )}

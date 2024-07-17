@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, IconButton, Icon, Badge } from '@chakra-ui/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useDropzone, Accept } from 'react-dropzone';
 import { FaEdit, FaImage, FaPlay, FaTrashAlt } from 'react-icons/fa';
 import { MdBloodtype } from 'react-icons/md';
@@ -10,28 +10,27 @@ import EditBloodTestModal from '../components/EditBloodTestModal';
 import { useEditBloodTestImageData } from '../hooks/useEditBloodTestImageData';
 import { useNavigate } from 'react-router-dom';
 import { useImageProcess } from '../hooks/useImageProcess';
+import usePatientDetail from '../hooks/usePatientsDetail';
 
-interface BloodTestDetailPageProps {
-  test?: BloodTest;
-}
 
-const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
-  const location = useLocation();
-  const { patientId, bloodTest } = location.state || {};
+const BloodTestDetailPage: React.FC = () => {
 
   const [files, setFiles] = useState<File[]>([]);
   const { profileBloodTestImageData, loading } = useAddBloodTestImageData();
   const { loading: editLoading, EditBloodTestImageData } = useEditBloodTestImageData();
 
+  const { patientId } = useParams<{ patientId: string, bloodTestId: string }>();
+  const { data: patient, error, isLoading } = usePatientDetail(patientId!);
+  
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editedImages, setEditedImages] = useState<ImageData[]>(bloodTest?.images || []);
+  const [editedImages, setEditedImages] = useState<ImageData[]>(patient?.blood_tests[0]?.images || []);
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
   const navigate = useNavigate();
   const { loading: processDataLoading, sendProcess } = useImageProcess();
 
   const handleResultClick = (result: Result) => {
-    navigate(`/patients/${patientId}/blood-test/${bloodTest.id}/result-detail`, { state: { result } });
+    navigate(`/patients/${patient?.id}/blood-test/${patient?.blood_tests[0]?.id}/result-detail`, { state: { result } });
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -48,13 +47,13 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   });
 
   const handleUpload = async () => {
-    if (!bloodTest || !patientId) return;
+    if (!patient?.blood_tests[0] || !patient?.id) return;
 
     const formData = new FormData();
     files.forEach(file => formData.append('image', file));
 
     try {
-      await profileBloodTestImageData(patientId, bloodTest.id, formData);
+      await profileBloodTestImageData(patient?.id, patient?.blood_tests[0]?.id, formData);
       console.log('Files uploaded successfully');
       setFiles([]);
     } catch (error) {
@@ -72,7 +71,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
 
   const handleCancelClick = () => {
     setEditMode(false);
-    setEditedImages(bloodTest?.images || []);
+    setEditedImages(patient?.blood_tests[0]?.images || []);
   };
 
   const handleDeleteImage = (imageId: number) => {
@@ -81,13 +80,13 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
   };
 
   const handleUpdate = async () => {
-    if (!bloodTest || !patientId) return;
+    if (!patient?.blood_tests[0] || !patient?.id) return;
 
     const formData = new FormData();
     deletedImageIds.forEach(id => formData.append('image_ids', id.toString()));
 
     try {
-      await EditBloodTestImageData(patientId, bloodTest.id, formData);
+      await EditBloodTestImageData(patient?.id, patient?.blood_tests[0]?.id, formData);
       console.log('Images updated successfully');
       setEditMode(false);
       setDeletedImageIds([]); // Clear the deleted image IDs after successful update
@@ -136,7 +135,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
     );
   };
 
-  if (!bloodTest) {
+  if (!patient?.blood_tests[0]) {
     return <Text>No blood test data available</Text>;
   }
 
@@ -145,7 +144,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
       <Box p={6} borderRadius="lg" mb={4}>
         <Flex align="center" mb={4}>
           <Icon as={MdBloodtype} fontSize="2xl" color="teal.500" mr={2} />
-          <Text fontSize="2xl" fontWeight="bold" mr={2}>{bloodTest.title}</Text>
+          <Text fontSize="2xl" fontWeight="bold" mr={2}>{patient?.blood_tests[0]?.title}</Text>
           <IconButton
             aria-label="Edit title"
             icon={<FaEdit />}
@@ -156,7 +155,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
           />
         </Flex>
         <Flex align="center">
-          <Text fontSize="lg">{bloodTest.description}</Text>
+          <Text fontSize="lg">{patient?.blood_tests[0]?.description}</Text>
         </Flex>
       </Box>
 
@@ -220,9 +219,9 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
               Results
             </Heading>
             <Divider mb={4} />
-            {bloodTest.results.length > 0 ? (
+            {patient?.blood_tests[0]?.results.length > 0 ? (
               <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
-                {bloodTest.results.map((result: Result) => (
+                {patient?.blood_tests[0]?.results.map((result: Result) => (
                 <Box
                   key={result.id}
                   mb={4}
@@ -292,7 +291,7 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
             <Divider mb={4} />
             <Button
               colorScheme="teal"
-              onClick={() => sendProcess(patientId, bloodTest?.id)}
+              onClick={() => sendProcess(patient?.id, patient?.blood_tests[0]?.id)}
               leftIcon={<FaPlay />}
               isLoading={processDataLoading}
               loadingText="Processing"
@@ -308,8 +307,8 @@ const BloodTestDetailPage: React.FC<BloodTestDetailPageProps> = () => {
       <EditBloodTestModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        patient_id={patientId}
-        blood_test={bloodTest}
+        patient_id={patient?.id}
+        blood_test={patient?.blood_tests[0]}
       />
     </Box>
   );
