@@ -63,7 +63,7 @@ const HospitalDetailPage: React.FC = () => {
       {error && (
         <Alert status="error">
           <AlertIcon />
-          {error}
+          {error.message}
         </Alert>
       )}
       {isLoading ? (
