@@ -41,7 +41,7 @@ export interface PatientData {
     birth_date: string;
     address: Address;
     blood_tests: BloodTest[];
-  }  
+  }
 
   const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => 
     useUserFetchData<PatientData>("patients/", query, sortField, sortOrder);

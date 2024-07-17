@@ -132,7 +132,7 @@ const PatientRegistrationForm: React.FC = () => {
               Submit
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error}</Text>}
+          {error && <Text color="red.500">{error.message}</Text>}
         </VStack>
       </form>
     </Box>

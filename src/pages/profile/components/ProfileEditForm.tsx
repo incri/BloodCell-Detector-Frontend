@@ -16,7 +16,7 @@ import { useProfile } from '../hooks/useProfile';
 import { profileFormSchema } from '../validations/profileFormSchema';
 
 interface ProfileEditFormProps {
-  onSave: (details: { firstName: string; lastName: string; email: string; }) => void;
+  onSave: (details: { firstName: string; lastName: string; email: string }) => void;
   firstName: string;
   lastName: string;
   email: string;
@@ -25,10 +25,10 @@ interface ProfileEditFormProps {
 const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave, firstName, lastName, email }) => {
   const profileInfoWidth = useBreakpointValue({ base: '100%', lg: '50%' });
   const { error, isLoading } = useUserDetail();
-  const { loading: saving, profileUser } = useProfile(); // Use the useProfile hook
+  const { loading: saving, updateUserProfile } = useProfile(); // Use the useProfile hook
   const [currentFirstName, setCurrentFirstName] = useState(firstName);
   const [currentLastName, setCurrentLastName] = useState(lastName);
-  const [currentEmail, setCurrentEmail] = useState(email);
+  const [currentEmail] = useState(email);
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,11 +40,11 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave, firstName, la
   const handleSave = async () => {
     try {
       await profileFormSchema.parseAsync({ first_name: currentFirstName, last_name: currentLastName, email: currentEmail });
-      await profileUser({ first_name: currentFirstName, last_name: currentLastName, email: currentEmail });
+      await updateUserProfile({ first_name: currentFirstName, last_name: currentLastName, email: currentEmail });
       onSave({
         firstName: currentFirstName,
         lastName: currentLastName,
-        email : currentEmail
+        email: currentEmail,
       });
     } catch (err) {
       console.error('Validation Error:', err);
@@ -96,15 +96,13 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ onSave, firstName, la
             value={currentLastName}
             onChange={(e) => setCurrentLastName(e.target.value)}
           />
-
-            <Input
-            placeholder="Email"
-            value={currentEmail}
-            onChange={(e) => setCurrentEmail(e.target.value)}
-            hidden
-          />
-          
-          <Button width="100%" colorScheme="teal" variant="solid" onClick={handleSave} isLoading={saving}>
+          <Button
+            width="100%"
+            colorScheme="teal"
+            variant="solid"
+            onClick={handleSave}
+            isLoading={saving}
+          >
             Save Profile
           </Button>
           <Divider orientation="horizontal" />

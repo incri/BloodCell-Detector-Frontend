@@ -1,30 +1,17 @@
-import { useState } from "react";
-import axios, { AxiosError } from "axios";
-import useApiClientUser from "../services/api-client-user";
+import { useMutation } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import useApiClientUser from '../services/api-client-user';
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   data?: T;
   status?: number;
   error?: string;
 }
 
 export const useUserPostData = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [response, setResponse] = useState<ApiResponse<any> | null>(null);
   const apiClientUser = useApiClientUser();
-
-  const fetchData = async <T>(
-    url: string,
-    method: string,
-    data?: any,
-    headers?: { [key: string]: string }
-  ): Promise<ApiResponse<T> | undefined> => {
-    setLoading(true);
-    setError("");
-    setResponse(null);
-
-    try {
+  const mutation = useMutation({
+    mutationFn: async ({ url, method, data, headers }: { url: string; method: string; data?: any; headers?: { [key: string]: string } }) => {
       const response = await apiClientUser.request({
         url,
         method,
@@ -32,34 +19,28 @@ export const useUserPostData = () => {
         headers,
       });
 
-      setLoading(false);
-      setResponse({
+      return {
         data: response.data,
         status: response.status,
-      });
-
-      return response;
-    } catch (error) {
-      setLoading(false);
-
+      };
+    },
+    onError: (error: AxiosError) => {
+      console.error('API Error:', error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<any>;
         if (axiosError.response?.data) {
-          setResponse({
-            data: axiosError.response.data,
-            status: axiosError.response.status,
-          });
+          throw new Error(axiosError.response.data.error || 'An error occurred.');
         } else {
-          setError("An error occurred.");
+          throw new Error('An error occurred.');
         }
       } else {
-        setResponse(null);
-        setError("An error occurred during registration.");
+        throw new Error('An error occurred during API call.');
       }
+    },
+    onSettled: () => {
+      window.location.reload();
+    },
+  });
 
-      console.error("API Error:", error);
-    }
-  };
-
-  return { loading, error, fetchData, response };
+  return mutation;
 };
