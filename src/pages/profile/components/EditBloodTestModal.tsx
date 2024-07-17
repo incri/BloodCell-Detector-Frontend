@@ -38,7 +38,7 @@ const EditBloodTestModal: React.FC<EditBloodTestModalProps> = ({ isOpen, onClose
       },
   });
 
-  const { loading, profileEditBloodTest } = useEditBloodTest();
+  const { isLoading, profileEditBloodTest, error } = useEditBloodTest();
 
   useEffect(() => {
     if (patient_id) {
@@ -51,12 +51,13 @@ const EditBloodTestModal: React.FC<EditBloodTestModalProps> = ({ isOpen, onClose
 
   const onSubmit = async (data: BloodTest) => {
     if (patient_id && blood_test) {
-      const response = await profileEditBloodTest(patient_id, blood_test.id,  data);
+      await profileEditBloodTest(patient_id, blood_test.id,  data);
+      onClose();
 
-      if (!response?.error) {
+      if (error) {
         onClose();
       } else {
-        console.error(response.error);
+        console.error(error);
       }
     }
   };
@@ -85,7 +86,7 @@ const EditBloodTestModal: React.FC<EditBloodTestModalProps> = ({ isOpen, onClose
               <FormErrorMessage>{errors.patient?.message}</FormErrorMessage>
             </FormControl>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} type="submit" isLoading={loading}>
+              <Button colorScheme="blue" mr={3} type="submit" isLoading={isLoading}>
                 Save
               </Button>
               <Button variant="ghost" onClick={onClose}>

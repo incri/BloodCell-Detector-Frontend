@@ -38,7 +38,7 @@ export const useUserPostData = () => {
       }
     },
     onSettled: () => {
-      window.location.reload();
+      // window.location.reload();
     },
   });
 

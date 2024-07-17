@@ -1,37 +1,47 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Text, Image, Heading, SimpleGrid, Divider, Button, Flex, IconButton, Icon, Badge } from '@chakra-ui/react';
-import { useLocation, useParams } from 'react-router-dom';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import {
+  Box,
+  Text,
+  Image,
+  Heading,
+  SimpleGrid,
+  Divider,
+  Button,
+  Flex,
+  IconButton,
+  Icon,
+  Badge,
+} from '@chakra-ui/react';
 import { useDropzone, Accept } from 'react-dropzone';
 import { FaEdit, FaImage, FaPlay, FaTrashAlt } from 'react-icons/fa';
 import { MdBloodtype } from 'react-icons/md';
-import { BloodTest, ImageData, Result } from '../hooks/usePatients';
-import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
+import { useNavigate, useParams } from 'react-router-dom';
 import EditBloodTestModal from '../components/EditBloodTestModal';
+import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 import { useEditBloodTestImageData } from '../hooks/useEditBloodTestImageData';
-import { useNavigate } from 'react-router-dom';
 import { useImageProcess } from '../hooks/useImageProcess';
 import usePatientDetail from '../hooks/usePatientsDetail';
-
+import { Result, ImageData } from '../hooks/usePatients';
 
 const BloodTestDetailPage: React.FC = () => {
-
-  const [files, setFiles] = useState<File[]>([]);
-  const { profileBloodTestImageData, loading } = useAddBloodTestImageData();
-  const { loading: editLoading, EditBloodTestImageData } = useEditBloodTestImageData();
-
-  const { patientId } = useParams<{ patientId: string, bloodTestId: string }>();
-  const { data: patient, error, isLoading } = usePatientDetail(patientId!);
-  
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [editedImages, setEditedImages] = useState<ImageData[]>(patient?.blood_tests[0]?.images || []);
-  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+  const { patientId } = useParams<{ patientId: string }>();
+  const { data: patient, error, isLoading, refetch } = usePatientDetail(patientId!);
   const navigate = useNavigate();
+  const { profileBloodTestImageData, loading: profileLoading } = useAddBloodTestImageData();
+  const { EditBloodTestImageData, loading: editLoading } = useEditBloodTestImageData();
   const { loading: processDataLoading, sendProcess } = useImageProcess();
 
-  const handleResultClick = (result: Result) => {
-    navigate(`/patients/${patient?.id}/blood-test/${patient?.blood_tests[0]?.id}/result-detail`, { state: { result } });
-  };
+  const [files, setFiles] = useState<File[]>([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editedImages, setEditedImages] = useState<ImageData[]>([]);
+  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (patient?.blood_tests[0]?.images) {
+      setEditedImages(patient?.blood_tests[0]?.images);
+    }
+  }, [patient]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
@@ -47,15 +57,17 @@ const BloodTestDetailPage: React.FC = () => {
   });
 
   const handleUpload = async () => {
-    if (!patient?.blood_tests[0] || !patient?.id) return;
+    if (!patient?.blood_tests[0]?.id) return;
 
     const formData = new FormData();
     files.forEach(file => formData.append('image', file));
 
     try {
-      await profileBloodTestImageData(patient?.id, patient?.blood_tests[0]?.id, formData);
+      await profileBloodTestImageData(patient?.id!, patient?.blood_tests[0]?.id, formData);
       console.log('Files uploaded successfully');
       setFiles([]);
+      // Refetch patient data after upload
+      refetch();
     } catch (error) {
       console.error('Error uploading files:', error);
     }
@@ -67,11 +79,14 @@ const BloodTestDetailPage: React.FC = () => {
 
   const handleEditClick = () => {
     setEditMode(true);
+    // Set edited images for edit mode
+    setEditedImages(patient?.blood_tests[0]?.images || []);
   };
 
   const handleCancelClick = () => {
     setEditMode(false);
     setEditedImages(patient?.blood_tests[0]?.images || []);
+    setDeletedImageIds([]);
   };
 
   const handleDeleteImage = (imageId: number) => {
@@ -80,19 +95,27 @@ const BloodTestDetailPage: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    if (!patient?.blood_tests[0] || !patient?.id) return;
+    if (!patient?.blood_tests[0]?.id || deletedImageIds.length === 0) return;
 
     const formData = new FormData();
     deletedImageIds.forEach(id => formData.append('image_ids', id.toString()));
 
     try {
-      await EditBloodTestImageData(patient?.id, patient?.blood_tests[0]?.id, formData);
+      await EditBloodTestImageData(patient?.id!, patient?.blood_tests[0]?.id, formData);
       console.log('Images updated successfully');
       setEditMode(false);
-      setDeletedImageIds([]); // Clear the deleted image IDs after successful update
+      setDeletedImageIds([]);
+      // Refetch patient data after update
+      refetch();
     } catch (error) {
       console.error('Error updating images:', error);
     }
+  };
+
+  const handleResultClick = (result: Result) => {
+    navigate(`/patients/${patient?.id}/blood-test/${patient?.blood_tests[0]?.id}/result-detail`, {
+      state: { result }
+    });
   };
 
   const renderAlbum = (images: ImageData[]) => {
@@ -134,6 +157,10 @@ const BloodTestDetailPage: React.FC = () => {
       </Box>
     );
   };
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   if (!patient?.blood_tests[0]) {
     return <Text>No blood test data available</Text>;
@@ -222,29 +249,25 @@ const BloodTestDetailPage: React.FC = () => {
             {patient?.blood_tests[0]?.results.length > 0 ? (
               <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
                 {patient?.blood_tests[0]?.results.map((result: Result) => (
-                <Box
-                  key={result.id}
-                  mb={4}
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  p={4}
-                  boxShadow="sm"
-                  cursor="pointer"
-                  onClick={() => handleResultClick(result)}
-                >
-                  <Text mb={2}><strong>ID:</strong> {result.id}</Text>
-                  {result.result_images.length > 0 ? (
-                    <Flex justifyContent="center">
-                      {renderAlbum(result.result_images)}
-                    </Flex>
-                  ) : (
-                    <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
-                      <FaImage size="50px" color="gray" />
-                      <Text>No images available</Text>
-                    </Flex>
-                  )}
-                </Box>
-              ))}
+                  <Box
+                    key={result.id}
+                    mb={4}
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    boxShadow="sm"
+                    cursor="pointer"
+                    onClick={() => handleResultClick(result)}
+                  >
+                    <Image src={result.image} alt={`Result image ${result.id}`} boxSize="100%" objectFit="cover" />
+                    <Box p={2}>
+                      <Text fontSize="md" fontWeight="semibold">
+                        {result.id}
+                      </Text>
+                      <Text fontSize="sm">{result.description}</Text>
+                    </Box>
+                  </Box>
+                ))}
               </SimpleGrid>
             ) : (
               <Text>No results available</Text>
@@ -277,39 +300,36 @@ const BloodTestDetailPage: React.FC = () => {
                   <Button colorScheme="red" mr={2} onClick={handleClear}>
                     Clear
                   </Button>
-                  <Button colorScheme="teal" onClick={handleUpload} isLoading={loading}>
+                  <Button colorScheme="teal" onClick={handleUpload} isLoading={isLoading}>
                     Upload
                   </Button>
                 </Flex>
               </Box>
             )}
           </Box>
+
           <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
             <Heading as="h3" size="md" mb={4}>
-              Process Dataset
+              Process Data
             </Heading>
             <Divider mb={4} />
             <Button
-              colorScheme="teal"
-              onClick={() => sendProcess(patient?.id, patient?.blood_tests[0]?.id)}
-              leftIcon={<FaPlay />}
+              onClick={() => sendProcess(patient?.id!, patient?.blood_tests[0]?.id)}
               isLoading={processDataLoading}
-              loadingText="Processing"
+              leftIcon={<FaPlay />}
+              colorScheme="blue"
             >
-              Process Dataset
+              Process Data
             </Button>
           </Box>
         </Box>
       </Flex>
 
-      
-
       <EditBloodTestModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        patient_id={patient?.id}
-        blood_test={patient?.blood_tests[0]}
-      />
+        blood_test={patient?.blood_tests[0]} 
+        patient_id={patient?.id}      />
     </Box>
   );
 };
