@@ -22,7 +22,7 @@ const ResetPasswordForm: React.FC = () => {
   const { loading, error, resetPasswordEmail, response } =
     useResetPasswordEmail();
 
-  const { status, data } = response || {};
+  const { status } = response || {};
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -96,7 +96,7 @@ const ResetPasswordForm: React.FC = () => {
               Reset Password
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error}</Text>}
+          {error && <Text color="red.500">{error.message}</Text>}
 
           <Link to="/login">
             <Flex alignItems="flex-start">

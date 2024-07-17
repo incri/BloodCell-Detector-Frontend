@@ -30,7 +30,7 @@ const ResetPasswordConfirmForm: React.FC = () => {
   const navigate = useNavigate();
   const {
     loading: resetPasswordLoading,
-    error: resetPasswordError,
+    error,
     resetPasswordConfirmation,
   } = useResetPasswordConfirmation();
 
@@ -113,9 +113,7 @@ const ResetPasswordConfirmForm: React.FC = () => {
               Change Password
             </Button>
           </Flex>
-          {resetPasswordError && (
-            <Text color="red.500">{resetPasswordError}</Text>
-          )}
+          {error && <Text color="red.500">{error.message}</Text>}
           <Link to="/login">
             <Flex alignItems="flex-start">
               <Text fontSize="sm" as="span" color="green.500">
