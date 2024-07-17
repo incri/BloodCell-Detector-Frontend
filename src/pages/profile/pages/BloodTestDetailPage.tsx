@@ -25,11 +25,11 @@ import { Result, ImageData } from '../hooks/usePatients';
 
 const BloodTestDetailPage: React.FC = () => {
   const { patientId } = useParams<{ patientId: string }>();
-  const { data: patient, error, isLoading, refetch } = usePatientDetail(patientId!);
+  const { data: patient, isLoading, refetch } = usePatientDetail(patientId!);
   const navigate = useNavigate();
-  const { profileBloodTestImageData, loading: profileLoading } = useAddBloodTestImageData();
+  const { profileBloodTestImageData } = useAddBloodTestImageData();
   const { editBloodTestImageData, isLoading: editLoading } = useEditBloodTestImageData();
-  const { loading: processDataLoading, sendProcess } = useImageProcess();
+  const { isLoading: processDataLoading, sendProcess } = useImageProcess();
 
   const [files, setFiles] = useState<File[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -116,6 +116,12 @@ const BloodTestDetailPage: React.FC = () => {
     navigate(`/patients/${patient?.id}/blood-test/${patient?.blood_tests[0]?.id}/result-detail`, {
       state: { result }
     });
+  };
+
+  const handleProcessCLick = async () => {
+    if(patient?.blood_tests[0]?.id)
+    await sendProcess(patient?.id!, patient?.blood_tests[0]?.id)
+    refetch();
   };
 
   const renderAlbum = (images: ImageData[]) => {
@@ -259,13 +265,17 @@ const BloodTestDetailPage: React.FC = () => {
                     cursor="pointer"
                     onClick={() => handleResultClick(result)}
                   >
-                    <Image src={result.image} alt={`Result image ${result.id}`} boxSize="100%" objectFit="cover" />
-                    <Box p={2}>
-                      <Text fontSize="md" fontWeight="semibold">
-                        {result.id}
-                      </Text>
-                      <Text fontSize="sm">{result.description}</Text>
-                    </Box>
+                    <Text mb={2}><strong>ID:</strong> {result.id}</Text>
+                  {result.result_images.length > 0 ? (
+                    <Flex justifyContent="center">
+                      {renderAlbum(result.result_images)}
+                    </Flex>
+                  ) : (
+                    <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
+                      <FaImage size="50px" color="gray" />
+                      <Text>No images available</Text>
+                    </Flex>
+                  )}
                   </Box>
                 ))}
               </SimpleGrid>
@@ -314,7 +324,7 @@ const BloodTestDetailPage: React.FC = () => {
             </Heading>
             <Divider mb={4} />
             <Button
-              onClick={() => sendProcess(patient?.id!, patient?.blood_tests[0]?.id)}
+              onClick={() => handleProcessCLick()}
               isLoading={processDataLoading}
               leftIcon={<FaPlay />}
               colorScheme="blue"
