@@ -119,7 +119,7 @@ const LoginForm: React.FC = () => {
               Log in
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error}</Text>}
+          {error && <Text color="red.500">{error.message}</Text>}
 
           <Link to="/register">
             <Flex alignItems="flex-start">

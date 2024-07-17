@@ -8,11 +8,32 @@ interface HospitalData {
 }
 
 export const useEditHospital = () => {
-  const { loading, error, fetchData, response } = usePostData();
+  const mutation = usePostData();
 
   const profileUser = async (id: string, hospitalData: HospitalData) => {
-    return await fetchData<void>(`/hospitals/${id}/`, "PUT", hospitalData);
+    try {
+      const response = await mutation.mutateAsync({
+        url: `/hospitals/${id}/`,
+        method: 'PUT',
+        data: hospitalData,
+      });
+
+      return response.data; // Assuming response structure returns data directly
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error editing hospital:', error.message);
+        throw error;
+      } else {
+        console.error('Unknown error occurred:', error);
+        throw new Error('An unknown error occurred.');
+      }
+    }
   };
 
-  return { loading, error, profileUser, response };
+  return { 
+    loading: mutation.isPending, 
+    error: mutation.error as Error | undefined, 
+    profileUser, 
+    response: mutation.data 
+  };
 };
