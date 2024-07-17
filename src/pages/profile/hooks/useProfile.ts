@@ -3,15 +3,24 @@ import { usePostData } from "../../../hooks/usePostData";
 interface UserData {
   first_name: string;
   last_name: string;
-  email: string
+  email: string;
 }
 
 export const useProfile = () => {
-  const { loading, error, fetchData, response } = usePostData();
+  const { isPending : loading, error, mutate: profileUser, data: response } = usePostData();
 
-  const profileUser = async (userData: UserData) => {
-    return await fetchData<void>("/auth/users/me/", "PUT", userData);
+  const updateUserProfile = async (userData: UserData) => {
+    try {
+      await profileUser({
+        url: "/auth/users/me/",
+        method: "PUT",
+        data: userData,
+      });
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
+    }
   };
 
-  return { loading, error, profileUser, response };
+  return { loading, error, updateUserProfile, response };
 };
