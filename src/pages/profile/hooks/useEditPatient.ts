@@ -2,11 +2,32 @@ import { useUserPostData } from "../../../hooks/useUserPostData";
 import { PatientDataRegister } from "./usePatientRegister";
 
 export const useEditPatient = () => {
-  const { loading, error, fetchData, response } = useUserPostData();
+  const mutation = useUserPostData();
 
   const profilePatient = async (id: string, patientData: PatientDataRegister) => {
-    return await fetchData<void>(`/patients/${id}/`, "PUT", patientData);
+    try {
+      const response = await mutation.mutateAsync({
+        url: `/patients/${id}/`,
+        method: "PUT",
+        data: patientData,
+      });
+
+      return response?.data; // Assuming response structure returns data directly
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error updating patient profile:', error.message);
+        throw error;
+      } else {
+        console.error('Unknown error occurred:', error);
+        throw new Error('An unknown error occurred.');
+      }
+    }
   };
 
-  return { loading, error, profilePatient, response };
+  return { 
+    loading: mutation.isPending, // Accessing loading state from useMutation
+    error: mutation.error as Error | undefined, // Accessing error state from useMutation
+    profilePatient,
+    response: mutation.data, // Accessing response data from useMutation
+  };
 };
