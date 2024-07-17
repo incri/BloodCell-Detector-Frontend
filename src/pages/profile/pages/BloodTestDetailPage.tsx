@@ -28,7 +28,7 @@ const BloodTestDetailPage: React.FC = () => {
   const { data: patient, error, isLoading, refetch } = usePatientDetail(patientId!);
   const navigate = useNavigate();
   const { profileBloodTestImageData, loading: profileLoading } = useAddBloodTestImageData();
-  const { EditBloodTestImageData, loading: editLoading } = useEditBloodTestImageData();
+  const { editBloodTestImageData, isLoading: editLoading } = useEditBloodTestImageData();
   const { loading: processDataLoading, sendProcess } = useImageProcess();
 
   const [files, setFiles] = useState<File[]>([]);
@@ -101,7 +101,7 @@ const BloodTestDetailPage: React.FC = () => {
     deletedImageIds.forEach(id => formData.append('image_ids', id.toString()));
 
     try {
-      await EditBloodTestImageData(patient?.id!, patient?.blood_tests[0]?.id, formData);
+      await editBloodTestImageData(patient?.id!, patient?.blood_tests[0]?.id, formData);
       console.log('Images updated successfully');
       setEditMode(false);
       setDeletedImageIds([]);
