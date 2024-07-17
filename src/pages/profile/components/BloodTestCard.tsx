@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, Text, Flex } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { BloodTest } from '../hooks/usePatients'; // Assuming BloodTest type is imported
+import { BloodTest, PatientData } from '../hooks/usePatients'; // Assuming BloodTest type is imported
 
 interface BloodTestCardProps {
   test: BloodTest;
-  patientId: string;
+  patient: PatientData;
 }
 
-const BloodTestCard: React.FC<BloodTestCardProps> = ({ test, patientId }) => {
+const BloodTestCard: React.FC<BloodTestCardProps> = ({ test, patient }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/patients/${patientId}/blood-test/${test.id}`, { state: { patientId, bloodTest: test } });
+    navigate(`/patients/${patient.id}/blood-test/${test.id}`, { state: {patient:patient, bloodTest: test} });
   };
 
   return (
