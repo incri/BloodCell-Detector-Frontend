@@ -6,7 +6,7 @@ export const useAddBloodTestImageData = () => {
   const queryClient = useQueryClient(); // Access query client
 
 
-  const profileBloodTestImageData = async (id: string, blood_test_id: string, formData: FormData) => {
+  const profileBloodTestImageData = async (id: string, blood_test_id: string | undefined, formData: FormData) => {
 
     try {
       const response = await mutation.mutateAsync({
@@ -16,7 +16,7 @@ export const useAddBloodTestImageData = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const queryKey = ['data', `patients/${id}/`]
+      const queryKey = ['data', `patients/${id}/blood-tests/${blood_test_id}/`]
       console.log(queryKey)
       queryClient.invalidateQueries({
         queryKey: queryKey

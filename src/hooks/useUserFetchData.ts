@@ -38,7 +38,7 @@ const useUserFetchData = <T>(
   };
 
   return useQuery<T[], Error>({
-    queryKey: ['userFetchData', endpoint, query, sortField, sortOrder],
+    queryKey: ['userFetchData', endpoint],
     queryFn: fetchFunc,
   });
 };

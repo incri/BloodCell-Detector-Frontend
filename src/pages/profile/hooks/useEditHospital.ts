@@ -1,4 +1,5 @@
 import { usePostData } from "../../../hooks/usePostData";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface HospitalData {
   name: string;
@@ -9,6 +10,8 @@ interface HospitalData {
 
 export const useEditHospital = () => {
   const mutation = usePostData();
+  const queryClient = useQueryClient(); // Access query client
+
 
   const profileUser = async (id: string, hospitalData: HospitalData) => {
     try {
@@ -16,6 +19,12 @@ export const useEditHospital = () => {
         url: `/hospitals/${id}/`,
         method: 'PUT',
         data: hospitalData,
+      });
+
+      const queryKey = ['fetchData',"/hospitals/"]
+      console.log(queryKey)
+      queryClient.invalidateQueries({
+        queryKey: queryKey
       });
 
       return response.data; // Assuming response structure returns data directly

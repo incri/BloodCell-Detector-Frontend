@@ -14,7 +14,7 @@ export const useImageProcess = () => {
       });
 
       // Invalidate any relevant queries after successful mutation
-      const queryKey = ['data', `patients/${id}/blood-tests/${bloodtest_id}`];
+      const queryKey = ['data', `patients/${id}/blood-tests/${bloodtest_id}/`];
       queryClient.invalidateQueries({ queryKey });
 
       return response?.data; // Assuming `mutateAsync` returns data directly
