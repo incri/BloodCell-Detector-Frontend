@@ -20,14 +20,14 @@ import EditBloodTestModal from '../components/EditBloodTestModal';
 import { useAddBloodTestImageData } from '../hooks/useAddBloodTestImageData';
 import { useEditBloodTestImageData } from '../hooks/useEditBloodTestImageData';
 import { useImageProcess } from '../hooks/useImageProcess';
-import { Result, ImageData } from '../hooks/usePatients';
+import { Result, ImageData, PatientData, BloodTest } from '../hooks/usePatients';
 import useBloodTestDetail from '../hooks/useBloodTestDetail';
 
 const BloodTestDetailPage: React.FC = () => {
   const { patientId } = useParams<{ patientId: string }>();
   const location = useLocation();
-  const { bloodTest } = location.state;
-  const { data: blood_tests, isLoading, refetch } = useBloodTestDetail(patientId!,bloodTest.id );
+  const { patient, bloodTest } = location.state;
+  const { data: blood_tests, isLoading } = useBloodTestDetail(patientId!,bloodTest.id );
   const navigate = useNavigate();
   const { profileBloodTestImageData } = useAddBloodTestImageData();
   const { editBloodTestImageData, isLoading: editLoading } = useEditBloodTestImageData();
@@ -109,9 +109,9 @@ const BloodTestDetailPage: React.FC = () => {
     }
   };
 
-  const handleResultClick = (result: Result) => {
+  const handleResultClick = (result: Result, patient: PatientData, blood_test: BloodTest ) => {
     navigate(`/patients/${patientId}/blood-test/${blood_tests?.id}/result-detail`, {
-      state: { result }
+      state: { result, patient, blood_test }
     });
   };
 
@@ -259,7 +259,7 @@ const BloodTestDetailPage: React.FC = () => {
                     overflow="hidden"
                     boxShadow="sm"
                     cursor="pointer"
-                    onClick={() => handleResultClick(result)}
+                    onClick={() => handleResultClick(result, patient, blood_tests)}
                   >
                     <Text mb={2}><strong>ID:</strong> {result.id}</Text>
                   {result.result_images.length > 0 ? (
