@@ -16,6 +16,7 @@ export interface ImageData {
   }
   
 export interface Result {
+    image: string | undefined;
     id: string;
     created_at: string;
     description: string;

@@ -32,7 +32,7 @@ export const usePostData = () => {
       }
     },
     onSettled: () => {
-      window.location.reload();
+      // window.location.reload();
     },
   });
 

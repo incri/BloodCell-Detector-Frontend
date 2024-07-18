@@ -1,6 +1,4 @@
-// src/components/CreateHospitalModal.tsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -31,30 +29,38 @@ const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClo
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
   const { loading, createHospital } = useHospitalCreate();
   const toast = useToast();
+
+  useEffect(() => {
+    if (!isOpen) {
+      setName('');
+      setAddress('');
+      setPhone('');
+      setEmail('');
+      setFormErrors([]);
+    }
+  }, [isOpen]);
 
   const handleSubmit = async () => {
     try {
       HospitalFormSchema.parse({ name, address, email, phone });
       const hospitalData: HospitalData = { name, address, email, phone };
-      const result = await createHospital(hospitalData);
-      if (result?.status === 201) {
+      await createHospital(hospitalData);
+        onClose();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setFormErrors(error.errors.map(err => err.message));
+      } else {
+        console.error("Error:", error);
         toast({
-          title: 'Hospital created.',
-          description: "The new hospital has been created successfully.",
-          status: 'success',
+          title: 'An error occurred.',
+          description: "Unable to create hospital. Please try again later.",
+          status: 'error',
           duration: 5000,
           isClosable: true,
         });
-        onClose();
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) { // Now TypeScript should recognize 'z'
-        setFormError(error.errors[0].message);
-      } else {
-        console.error("Error:", error);
       }
     }
   };
@@ -66,10 +72,12 @@ const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClo
         <ModalHeader>Create Hospital</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {formError && (
+          {formErrors.length > 0 && (
             <Alert status="error" mb={4}>
               <AlertIcon />
-              {formError}
+              {formErrors.map((error, index) => (
+                <div key={index}>{error}</div>
+              ))}
             </Alert>
           )}
           <FormControl mb={4}>
@@ -90,7 +98,7 @@ const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClo
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit} isLoading={loading}>
+          <Button colorScheme="blue" mr={3} onClick={handleSubmit} isLoading={loading} disabled={loading}>
             Create
           </Button>
           <Button variant="ghost" onClick={onClose}>Cancel</Button>

@@ -16,9 +16,9 @@ const fetchData = async <T>(endpoint: string, query: string = "", sortField: str
   return data.results;
 };
 
-const useFetchData = <T>(endpoint: string, query: string = "", sortField: string | null = null, sortOrder: 'asc' | 'desc' = 'asc') => {
+const useFetchData = <T>(endpoint: string, query: string = "", sortField: string | null = null, sortOrder: 'asc' | 'desc' = 'asc',) => {
   return useQuery<T[], Error>({
-    queryKey: ['fetchData', endpoint, query, sortField, sortOrder],
+    queryKey: ['fetchData', endpoint],
     queryFn: () => fetchData<T>(endpoint, query, sortField, sortOrder),
   });
 };

@@ -5,7 +5,7 @@ export const useEditBloodTestImageData = () => {
   const mutation = useUserPostData();
   const queryClient = useQueryClient(); // Access query client
 
-  const editBloodTestImageData = async (id: string, blood_test_id: string, formData: FormData) => {
+  const editBloodTestImageData = async (id: string, blood_test_id: string | undefined, formData: FormData) => {
     try {
       const response = await mutation.mutateAsync({
         url: `/patients/${id}/blood-tests/${blood_test_id}/data-images/batch-delete/`,
@@ -15,7 +15,7 @@ export const useEditBloodTestImageData = () => {
       });
 
       // Example: Invalidate relevant queries after mutation
-      const queryKey = ['data', `patients/${id}/`]
+      const queryKey = ['data', `patients/${id}/blood-tests/${blood_test_id}/`]
       queryClient.invalidateQueries({
         queryKey: queryKey
       });

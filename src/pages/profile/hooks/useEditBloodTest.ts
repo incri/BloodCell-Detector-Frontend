@@ -15,7 +15,7 @@ export const useEditBloodTest = () => {
       });
 
       // Invalidate patient detail query to trigger refetch
-      const queryKey = ['data', `patients/${id}/`]
+      const queryKey = ['data', `patients/${id}/blood-tests/${blood_test_id}/`]
       console.log(queryKey)
       queryClient.invalidateQueries({
         queryKey: queryKey

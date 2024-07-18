@@ -1,8 +1,11 @@
 import { useUserPostData } from "../../../hooks/useUserPostData";
 import { BloodTest } from "./usePatients";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useAddBloodTest = () => {
   const mutation = useUserPostData();
+  const queryClient = useQueryClient(); // Access query client
+
 
   const profileBloodTest = async (id: string, bloodTestData: BloodTest) => {
     try {
@@ -10,6 +13,12 @@ export const useAddBloodTest = () => {
         url: `/patients/${id}/blood-tests/`,
         method: "POST",
         data: bloodTestData,
+      });
+
+      const queryKey = ['data',`patients/${id}/`]
+      console.log(queryKey)
+      queryClient.invalidateQueries({
+        queryKey: queryKey
       });
 
       return response?.data; // Assuming response structure returns data directly

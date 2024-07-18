@@ -23,7 +23,7 @@ import { useEditBloodTest } from '../hooks/useEditBloodTest';
 interface EditBloodTestModalProps {
   isOpen: boolean;
   onClose: () => void;
-  patient_id: string;
+  patient_id: string | undefined;
   blood_test: BloodTest | null;
 
 }
