@@ -1,27 +1,16 @@
-# React + TypeScript + Vite
+# BloodCell-Detector-Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+BloodCell-Detector-Frontend is a user-friendly interface developed using React and TypeScript, designed to provide an exceptional user experience for the BloodCell-Detector project. The frontend leverages Chakra UI for a consistent and appealing UI/UX, ensuring that users can easily interact with the blood cell detection capabilities provided by the backend service.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- **React + TypeScript**: Built with React for a dynamic and responsive UI, and TypeScript for type safety and improved development experience.
+- **Chakra UI**: Utilizes Chakra UI for modern, accessible, and highly customizable components.
+- **User Authentication**: Implements secure user authentication with an `AuthProvider` and `useAuth` hook.
+- **Protected Routes**: Ensures that only authenticated users can access certain routes using a `ProtectedRoute` component.
+- **Patient Management**: Allows users to register patients, view patient details, and manage blood test data.
+- **Blood Test Processing**: Enables users to upload images, process them with the backend service, and view labeled results with counts of RBC, WBC, and Platelets.
+- **Responsive Design**: Designed to be fully responsive and accessible on various devices.
+- **State Management**: Efficient state management using React Query for data fetching and caching.
