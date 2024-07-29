@@ -56,7 +56,7 @@ const RegistrationFormGrid: React.FC = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    if (newQuery.trim() !== "") {
+    if (newQuery.trim() !== "" && hospitals) {
       setSearchResults(hospitals.filter((hospital) =>
         hospital.name.toLowerCase().includes(newQuery.toLowerCase())
       ));
@@ -252,7 +252,7 @@ const RegistrationFormGrid: React.FC = () => {
               Sign up
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error}</Text>}
+          {error && <Text color="red.500">{error.message}</Text>}
           <Link to="/login">
             <Flex alignItems="flex-start">
               <Text fontSize="sm" mr={2}>
