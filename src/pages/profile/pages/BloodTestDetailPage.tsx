@@ -11,9 +11,10 @@ import {
   IconButton,
   Icon,
   Badge,
+  Spinner,
 } from '@chakra-ui/react';
 import { useDropzone, Accept } from 'react-dropzone';
-import { FaEdit, FaImage, FaPlay, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaImage, FaTrashAlt } from 'react-icons/fa';
 import { MdBloodtype } from 'react-icons/md';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import EditBloodTestModal from '../components/EditBloodTestModal';
@@ -31,7 +32,7 @@ const BloodTestDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { profileBloodTestImageData } = useAddBloodTestImageData();
   const { editBloodTestImageData, isLoading: editLoading } = useEditBloodTestImageData();
-  const { isLoading: processDataLoading, sendProcess } = useImageProcess();
+  const { isLoading: processDataLoading, sendProcess, progress, connectionStatus } = useImageProcess();
 
   const [files, setFiles] = useState<File[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -314,19 +315,40 @@ const BloodTestDetailPage: React.FC = () => {
             )}
           </Box>
 
+          <Box flex="3" ml={4}>
           <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
-            <Heading as="h3" size="md" mb={4}>
-              Process Data
-            </Heading>
-            <Divider mb={4} />
-            <Button
-              onClick={() => handleProcessCLick()}
-              isLoading={processDataLoading}
-              leftIcon={<FaPlay />}
-              colorScheme="blue"
-            >
-              Process Data
-            </Button>
+            <Flex justifyContent={'space-between'} mb={4}>
+              <Heading as="h3" size="md">
+                Process Images
+              </Heading>
+              <Button
+                colorScheme="teal"
+                onClick={handleProcessCLick}
+                isLoading={processDataLoading}
+              >
+                Process Data
+              </Button>
+            </Flex>
+            {progress !== null && (
+              <Flex alignItems="center">
+                <Text mr={2}>Processing:</Text>
+                <Text fontWeight="bold">{progress}%</Text>
+                {progress  && (
+                  <Spinner ml={2} size="sm" />
+                )}
+              </Flex>
+            )}
+            {connectionStatus === 'connected' && (
+              <Text mt={2} color="green.500">
+                WebSocket connection established
+              </Text>
+            )}
+            {connectionStatus === 'disconnected' && (
+              <Text mt={2} color="red.500">
+                WebSocket connection lost
+              </Text>
+            )}
+          </Box>
           </Box>
         </Box>
       </Flex>
