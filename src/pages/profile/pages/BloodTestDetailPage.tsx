@@ -316,40 +316,38 @@ const BloodTestDetailPage: React.FC = () => {
           </Box>
 
           <Box flex="3" ml={4}>
-          <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
-            <Flex justifyContent={'space-between'} mb={4}>
-              <Heading as="h3" size="md">
-                Process Images
-              </Heading>
-              <Button
-                colorScheme="teal"
-                onClick={handleProcessCLick}
-                isLoading={processDataLoading}
-              >
-                Process Data
-              </Button>
-            </Flex>
-            {progress !== null && (
-              <Flex alignItems="center">
-                <Text mr={2}>Processing:</Text>
-                <Text fontWeight="bold">{progress}%</Text>
-                {progress  && (
-                  <Spinner ml={2} size="sm" />
-                )}
-              </Flex>
-            )}
-            {connectionStatus === 'connected' && (
-              <Text mt={2} color="green.500">
-                WebSocket connection established
-              </Text>
-            )}
-            {connectionStatus === 'disconnected' && (
-              <Text mt={2} color="red.500">
-                WebSocket connection lost
-              </Text>
-            )}
-          </Box>
-          </Box>
+  <Box p={6} borderWidth="1px" borderRadius="lg" boxShadow="md" mb={4}>
+    <Flex justifyContent={'space-between'} mb={4}>
+      <Heading as="h3" size="md">
+        Process Images
+      </Heading>
+      <Button
+        colorScheme="teal"
+        onClick={handleProcessCLick}
+        isLoading={processDataLoading}
+      >
+        Process Data
+      </Button>
+    </Flex>
+    {progress !== null && (
+      <Flex alignItems="center" mb={2}>
+        <Text mr={2}>Processing:</Text>
+        <Text fontWeight="bold">{progress}</Text>
+      </Flex>
+    )}
+    {connectionStatus === 'connected' && (
+      <Text mt={2} color="green.500">
+        WebSocket connection established
+      </Text>
+    )}
+    {connectionStatus === 'disconnected' && (
+      <Text mt={2} color="red.500">
+        WebSocket connection lost
+      </Text>
+    )}
+  </Box>
+</Box>
+
         </Box>
       </Flex>
 

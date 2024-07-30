@@ -35,13 +35,14 @@ const router = createBrowserRouter([
       { path: ':username/', element: <ProfilePage /> },
       { path: 'patient/:id', element: <PatientsDetailPage /> },
       {path: "/patients/:patientId/blood-test/:bloodTestId" , element:< BloodTestDetailPage />},
-      {path: "/patients/:patientId/blood-test/:bloodTestId/result-detail" , element:< BloodTestResultDetailPage />}
+      {path: "/patients/:patientId/blood-test/:bloodTestId/result-detail" , element:< BloodTestResultDetailPage />},
+      { path: 'onboarding', element: <EmailVerificationPage /> },
+
 
 
     ],
   },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
-  { path: 'onboarding', element: <ProtectedRoute><EmailVerificationPage /></ProtectedRoute> },
   { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
   { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
   { path: '/login', element: <LoginPage /> },

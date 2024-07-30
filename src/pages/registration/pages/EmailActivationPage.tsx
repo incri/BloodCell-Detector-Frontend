@@ -76,7 +76,7 @@ const EmailActivationPage = () => {
           buttonText="OK"
         />
       )}
-      {activateError && <p style={{ color: "red" }}>{activateError}</p>}
+      {activateError && <p style={{ color: "red" }}>{activateError.message}</p>}
     </>
   );
 };

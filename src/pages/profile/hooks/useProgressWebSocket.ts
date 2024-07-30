@@ -26,7 +26,9 @@ export const useWebSocket = () => {
       console.log('Received WebSocket message:', event.data);
       try {
         const { message } = JSON.parse(event.data);
-        setProgress((prev) => prev + '\n' + message);
+        console.log({message});
+        // Set the new message directly, replacing the old message
+        setProgress(message);
       } catch (e) {
         console.error('Error parsing WebSocket message:', e);
       }
