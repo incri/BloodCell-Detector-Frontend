@@ -16,6 +16,7 @@ export const usePostData = () => {
         method,
         data,
       });
+      
       return response.data;
     },
     onError: (error: AxiosError) => {
