@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useAuth } from "../../../components/authContext";
 import { usePostData } from "../../../hooks/usePostData";
 
@@ -9,6 +10,7 @@ interface LoginUserData {
 export const useLogin = () => {
   const mutation = usePostData();
   const { login } = useAuth();
+  const [customError, setCustomError] = useState<Error | null>(null);
 
   const loginUser = async (userData: LoginUserData) => {
     try {
@@ -18,11 +20,8 @@ export const useLogin = () => {
         data: userData,
       });
 
-      console.log(`Hello, ${response.access}`);
-
       if (response?.access && response?.user) {
         const { access, user } = response;
-
         login(access, user);
         return true;
       }
@@ -31,18 +30,20 @@ export const useLogin = () => {
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error logging in:', error.message);
+        setCustomError(error); // Store the custom error message
         throw error;
       } else {
-        console.error('Unknown error occurred:', error);
-        throw new Error('An unknown error occurred.');
+        const unknownError = new Error('An unknown error occurred.');
+        setCustomError(unknownError);
+        throw unknownError;
       }
     }
   };
 
   return { 
-    loading: mutation.isPending, // Accessing loading state from useMutation
-    error: mutation.error as Error | undefined, // Accessing error state from useMutation
-    loginUser, 
-    response: mutation.data // Accessing response data from useMutation
+    loading: mutation.isPending,
+    error: customError || (mutation.error as Error | undefined), // Use custom error if available
+    loginUser,
+    response: mutation.data
   };
 };
