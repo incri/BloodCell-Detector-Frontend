@@ -11,13 +11,15 @@ import {
   Input,
   FormControl,
   FormLabel,
-  Alert,
-  AlertIcon,
+  Text,
+  VStack,
   useToast,
 } from '@chakra-ui/react';
-import { useHospitalCreate } from '../hooks/useHospitalCreate';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HospitalData, HospitalFormSchema } from '../validations/HospitalEditFormSchema';
-import { z } from "zod";
+import { useHospitalCreate } from '../hooks/useHospitalCreate';
+import { z } from 'zod';
 
 interface CreateHospitalModalProps {
   isOpen: boolean;
@@ -25,38 +27,38 @@ interface CreateHospitalModalProps {
 }
 
 const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClose }) => {
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [formErrors, setFormErrors] = useState<string[]>([]);
   const { loading, createHospital } = useHospitalCreate();
   const toast = useToast();
+  
+  const { handleSubmit, register, formState: { errors }, reset } = useForm<HospitalData>({
+    resolver: zodResolver(HospitalFormSchema),
+  });
 
   useEffect(() => {
     if (!isOpen) {
-      setName('');
-      setAddress('');
-      setPhone('');
-      setEmail('');
-      setFormErrors([]);
+      reset(); // Reset the form when the modal is closed
     }
-  }, [isOpen]);
+  }, [isOpen, reset]);
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data: HospitalData) => {
     try {
-      HospitalFormSchema.parse({ name, address, email, phone });
-      const hospitalData: HospitalData = { name, address, email, phone };
-      await createHospital(hospitalData);
-        onClose();
+      await createHospital(data);
+      onClose();
+      toast({
+        title: 'Hospital Created',
+        description: 'The hospital has been successfully created.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setFormErrors(error.errors.map(err => err.message));
+        // Handle Zod validation errors if needed
       } else {
-        console.error("Error:", error);
+        console.error('Error:', error);
         toast({
           title: 'An error occurred.',
-          description: "Unable to create hospital. Please try again later.",
+          description: 'Unable to create hospital. Please try again later.',
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -72,33 +74,62 @@ const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClo
         <ModalHeader>Create Hospital</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {formErrors.length > 0 && (
-            <Alert status="error" mb={4}>
-              <AlertIcon />
-              {formErrors.map((error, index) => (
-                <div key={index}>{error}</div>
-              ))}
-            </Alert>
-          )}
-          <FormControl mb={4}>
-            <FormLabel>Hospital Name</FormLabel>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel>Address</FormLabel>
-            <Input value={address} onChange={(e) => setAddress(e.target.value)} />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel>Phone</FormLabel>
-            <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
-          </FormControl>
-          <FormControl mb={4}>
-            <FormLabel>Email</FormLabel>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-          </FormControl>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={4} align="stretch">
+              <FormControl id="name" isInvalid={!!errors.name}>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  placeholder="Hospital Name"
+                  {...register('name')}
+                />
+                {errors.name && (
+                  <Text color="red.500">{errors.name.message}</Text>
+                )}
+              </FormControl>
+
+              <FormControl id="address" isInvalid={!!errors.address}>
+                <FormLabel>Address</FormLabel>
+                <Input
+                  placeholder="Hospital Address"
+                  {...register('address')}
+                />
+                {errors.address && (
+                  <Text color="red.500">{errors.address.message}</Text>
+                )}
+              </FormControl>
+
+              <FormControl id="phone" isInvalid={!!errors.phone}>
+                <FormLabel>Phone</FormLabel>
+                <Input
+                  placeholder="Hospital Phone"
+                  {...register('phone')}
+                />
+                {errors.phone && (
+                  <Text color="red.500">{errors.phone.message}</Text>
+                )}
+              </FormControl>
+
+              <FormControl id="email" isInvalid={!!errors.email}>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  placeholder="Hospital Email"
+                  {...register('email')}
+                />
+                {errors.email && (
+                  <Text color="red.500">{errors.email.message}</Text>
+                )}
+              </FormControl>
+            </VStack>
+          </form>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit} isLoading={loading} disabled={loading}>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={handleSubmit(onSubmit)}
+            isLoading={loading}
+            disabled={loading}
+          >
             Create
           </Button>
           <Button variant="ghost" onClick={onClose}>Cancel</Button>

@@ -9,6 +9,9 @@ interface UserData {
 export const useProfile = () => {
   const { isPending : loading, error, mutate: profileUser, data: response } = usePostData();
 
+
+  
+
   const updateUserProfile = async (userData: UserData) => {
     try {
       await profileUser({
@@ -16,11 +19,16 @@ export const useProfile = () => {
         method: "PUT",
         data: userData,
       });
+
+
+      
     } catch (error) {
       console.error('Error updating user profile:', error);
       throw error;
     }
   };
+
+  
 
   return { loading, error, updateUserProfile, response };
 };

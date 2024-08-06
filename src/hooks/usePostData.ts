@@ -16,6 +16,7 @@ export const usePostData = () => {
         method,
         data,
       });
+      
       return response.data;
     },
     onError: (error: AxiosError) => {
@@ -23,14 +24,20 @@ export const usePostData = () => {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<any>;
         if (axiosError.response?.data) {
-          throw new Error(axiosError.response.data.error || 'An error occurred.');
+          // If the backend sends a specific error message, extract it
+          const errorMessage = axiosError.response.data.error || 
+                               axiosError.response.data.non_field_errors?.[0] || 
+                               'An error occurred.';
+          throw new Error(errorMessage);
         } else {
-          throw new Error('An error occurred.');
+          throw new Error(axiosError.message || 'An error occurred.');
         }
       } else {
         throw new Error('An error occurred during API call.');
       }
     },
+    
+    
     onSettled: () => {
       // window.location.reload();
     },
