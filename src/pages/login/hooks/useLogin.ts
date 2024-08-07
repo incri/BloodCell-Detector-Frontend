@@ -10,7 +10,7 @@ interface LoginUserData {
 export const useLogin = () => {
   const mutation = usePostData();
   const { login } = useAuth();
-  const [customError, setCustomError] = useState<Error | null>(null);
+  const [customError, setCustomError] = useState<Record<string, string[]> | null>(null);
 
   const loginUser = async (userData: LoginUserData) => {
     try {
@@ -28,12 +28,12 @@ export const useLogin = () => {
 
       return false;
     } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error logging in:', error.message);
-        setCustomError(error); // Store the custom error message
+      if (typeof error === 'object' && error !== null) {
+        console.error('Error logging in:', error);
+        setCustomError(error as Record<string, string[]>); // Store the custom error object
         throw error;
       } else {
-        const unknownError = new Error('An unknown error occurred.');
+        const unknownError = { general: ['An unknown error occurred.'] };
         setCustomError(unknownError);
         throw unknownError;
       }
@@ -41,9 +41,9 @@ export const useLogin = () => {
   };
 
   return { 
-    loading: mutation.isPending,
-    error: customError || (mutation.error as Error | undefined), // Use custom error if available
+    loading: mutation.isPending, // Accessing loading state from useMutation
+    error: customError, // Use custom error object
     loginUser,
-    response: mutation.data
+    response: mutation.data // Accessing response data from useMutation
   };
 };

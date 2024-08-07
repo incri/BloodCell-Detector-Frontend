@@ -12,6 +12,7 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
+  Text
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +38,7 @@ const EditHospitalModal: React.FC<EditHospitalModalProps> = ({ isOpen, onClose, 
     },
   });
 
-  const { loading, profileUser } = useEditHospital();
+  const { loading, profileUser, error } = useEditHospital();
 
   useEffect(() => {
     if (hospital) {
@@ -90,6 +91,7 @@ const EditHospitalModal: React.FC<EditHospitalModalProps> = ({ isOpen, onClose, 
               <Input {...register('email')} />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
+            {error && <Text color="red.500">{error.message}</Text>}
             <ModalFooter>
               <Button colorScheme="blue" mr={3} type="submit" isLoading={loading}>
                 Save

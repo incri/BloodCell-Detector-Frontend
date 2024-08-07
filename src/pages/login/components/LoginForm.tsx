@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "../validations/loginSchema";
 
 const LoginForm: React.FC = () => {
-  const { loading, error, loginUser, response } = useLogin();
+  const { loading, error, loginUser } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const {
@@ -36,9 +36,6 @@ const LoginForm: React.FC = () => {
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  const { data, status } = response || {};
-
   const onSubmit = async (data: LoginFormData) => {
     const result = await loginUser(data);
 
@@ -74,7 +71,8 @@ const LoginForm: React.FC = () => {
             <Input type="text" placeholder="John" {...register("username")} />
             {errors.username && (
               <Text color="red.500">{errors.username.message}</Text>
-            )}
+            ) 
+}
           </FormControl>
           <FormControl id="password">
             <FormLabel mb={1}>Password</FormLabel>
@@ -96,10 +94,7 @@ const LoginForm: React.FC = () => {
             </InputGroup>
             {(errors.password && (
               <Text color="red.500">{errors.password.message}</Text>
-            )) ||
-              (status === 401 && data?.detail && (
-                <Text color="red.500">username or password did not match.</Text>
-              ))}
+            )) || <Text color="red.500">{error?.non_field_errors}</Text>}
 
             <Link to="/request-reset-password">
               <Flex alignItems="flex-start" mt={2}>
@@ -119,7 +114,7 @@ const LoginForm: React.FC = () => {
               Log in
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error.message}</Text>}
+          {error && <Text color="red.500">{error.general}</Text>}
 
           <Link to="/register">
             <Flex alignItems="flex-start">

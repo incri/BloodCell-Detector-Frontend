@@ -27,7 +27,7 @@ interface CreateHospitalModalProps {
 }
 
 const CreateHospitalModal: React.FC<CreateHospitalModalProps> = ({ isOpen, onClose }) => {
-  const { loading, createHospital } = useHospitalCreate();
+  const { loading, createHospital, error } = useHospitalCreate();
   const toast = useToast();
   
   const { handleSubmit, register, formState: { errors }, reset } = useForm<HospitalData>({

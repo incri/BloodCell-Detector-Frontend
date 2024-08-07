@@ -2,12 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import apiClient from '../services/api-client';
 import axios, { AxiosError } from 'axios';
 
-export interface ApiResponse<T> {
-  data?: T;
-  status?: number;
-  error?: string;
-}
-
 export const usePostData = () => {
   const mutation = useMutation({
     mutationFn: async ({ url, method, data }: { url: string; method: string; data?: any }) => {
@@ -16,30 +10,40 @@ export const usePostData = () => {
         method,
         data,
       });
-      
       return response.data;
     },
     onError: (error: AxiosError) => {
       console.error('API Error:', error);
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<any>;
+
+        let errorMessages: Record<string, string[]> = {};
+
         if (axiosError.response?.data) {
-          // If the backend sends a specific error message, extract it
-          const errorMessage = axiosError.response.data.error || 
-                               axiosError.response.data.non_field_errors?.[0] || 
-                               'An error occurred.';
-          throw new Error(errorMessage);
+          const errorData = axiosError.response.data;
+
+          if (typeof errorData === 'object') {
+            for (const key in errorData) {
+              if (Array.isArray(errorData[key])) {
+                errorMessages[key] = errorData[key];
+              } else if (typeof errorData[key] === 'string') {
+                errorMessages[key] = [errorData[key]];
+              }
+            }
+          } else if (typeof errorData === 'string') {
+            errorMessages['general'] = [errorData];
+          }
         } else {
-          throw new Error(axiosError.message || 'An error occurred.');
+          errorMessages['general'] = [axiosError.message || 'An error occurred.'];
         }
+
+        throw errorMessages;
       } else {
         throw new Error('An error occurred during API call.');
       }
     },
-    
-    
     onSettled: () => {
-      // window.location.reload();
+      // window.location.reload(); // Example use case, can be replaced with refetchQueries etc.
     },
   });
 
