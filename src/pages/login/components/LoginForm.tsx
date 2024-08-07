@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "../validations/loginSchema";
 
 const LoginForm: React.FC = () => {
-  const { loading, error, loginUser, response } = useLogin();
+  const { loading, error, loginUser } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const {
@@ -36,9 +36,6 @@ const LoginForm: React.FC = () => {
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  const { data, status } = response || {};
-
   const onSubmit = async (data: LoginFormData) => {
     const result = await loginUser(data);
 
