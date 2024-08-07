@@ -148,10 +148,8 @@ const RegistrationFormGrid: React.FC = () => {
             />
             {(errors.email && (
               <Text color="red.500">{errors.email.message}</Text>
-            )) ||
-              (response && response.status === 400 && response.data.email && (
-                <Text color="red.500">Email already in use.</Text>
-              ))}
+            )) || <Text color="red.500">{error?.email}</Text>}
+
           </FormControl>
           <FormControl id="username">
             <FormLabel mb={1}>Username</FormLabel>
@@ -163,9 +161,7 @@ const RegistrationFormGrid: React.FC = () => {
             {(errors.username && (
               <Text color="red.500">{errors.username.message}</Text>
             )) ||
-              (response && response.status === 400 && response.data.username && (
-                <Text color="red.500">Username already taken.</Text>
-              ))}
+            <Text color="red.500">{error?.username}</Text>}
           </FormControl>
           <FormControl id="password">
             <FormLabel mb={1}>Password</FormLabel>
@@ -252,7 +248,7 @@ const RegistrationFormGrid: React.FC = () => {
               Sign up
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error.message}</Text>}
+          {error && <Text color="red.500">{error.general}</Text>}
           <Link to="/login">
             <Flex alignItems="flex-start">
               <Text fontSize="sm" mr={2}>

@@ -74,7 +74,8 @@ const LoginForm: React.FC = () => {
             <Input type="text" placeholder="John" {...register("username")} />
             {errors.username && (
               <Text color="red.500">{errors.username.message}</Text>
-            )}
+            ) 
+}
           </FormControl>
           <FormControl id="password">
             <FormLabel mb={1}>Password</FormLabel>
@@ -96,10 +97,7 @@ const LoginForm: React.FC = () => {
             </InputGroup>
             {(errors.password && (
               <Text color="red.500">{errors.password.message}</Text>
-            )) ||
-              (status === 401 && data?.detail && (
-                <Text color="red.500">username or password did not match.</Text>
-              ))}
+            )) || <Text color="red.500">{error?.non_field_errors}</Text>}
 
             <Link to="/request-reset-password">
               <Flex alignItems="flex-start" mt={2}>
@@ -119,7 +117,7 @@ const LoginForm: React.FC = () => {
               Log in
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error.message}</Text>}
+          {error && <Text color="red.500">{error.general}</Text>}
 
           <Link to="/register">
             <Flex alignItems="flex-start">
