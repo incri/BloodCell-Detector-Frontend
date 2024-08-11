@@ -329,22 +329,25 @@ const BloodTestDetailPage: React.FC = () => {
         Process Data
       </Button>
     </Flex>
-    {progress !== null && (
-      <Flex alignItems="center" mb={2}>
-        <Text mr={2}>Processing:</Text>
-        <Text fontWeight="bold">{progress}</Text>
-      </Flex>
-    )}
-    {connectionStatus === 'connected' && (
-      <Text mt={2} color="green.500">
-        WebSocket connection established
-      </Text>
-    )}
-    {connectionStatus === 'disconnected' && (
-      <Text mt={2} color="red.500">
-        WebSocket connection lost
-      </Text>
-    )}
+    <Flex direction="column" p={4}>
+      {processDataLoading && (
+        <Flex alignItems="center" mb={4}>
+          <Spinner mr={2} /> {/* Show spinner while loading */}
+          <Text>Processing...</Text>
+        </Flex>
+      )}
+
+      {connectionStatus === 'disconnected' && (
+        <Text color="red.500" mb={4}>WebSocket disconnected. Reconnecting...</Text>
+      )}
+
+      {progress && (
+        <Flex alignItems="center" mb={2}>
+          <Text mr={2}>Processing:</Text>
+          <Text fontWeight="bold">{progress}</Text>
+        </Flex>
+      )}
+    </Flex>
   </Box>
 </Box>
 
