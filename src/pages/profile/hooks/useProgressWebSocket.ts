@@ -13,10 +13,12 @@ export const useWebSocket = () => {
       console.log('WebSocket connection opened');
       setConnectionStatus('connected');
     };
+    
     socket.onclose = () => {
       console.log('WebSocket connection closed');
       setConnectionStatus('disconnected');
     };
+    
     socket.onerror = (error) => {
       console.error('WebSocket error:', error);
       setConnectionStatus('disconnected');
@@ -25,10 +27,14 @@ export const useWebSocket = () => {
     socket.onmessage = (event) => {
       console.log('Received WebSocket message:', event.data);
       try {
-        const { message } = JSON.parse(event.data);
-        console.log({message});
-        // Set the new message directly, replacing the old message
-        setProgress(message);
+        const { type, message } = JSON.parse(event.data);
+        
+        if (type === 'progress_message') {
+          console.log({ message });
+          setProgress(message);
+        } else {
+          console.warn('Unexpected message type:', type);
+        }
       } catch (e) {
         console.error('Error parsing WebSocket message:', e);
       }

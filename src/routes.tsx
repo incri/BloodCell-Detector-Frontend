@@ -20,7 +20,6 @@ import NotAuthorizedPage from './pages/NotAuthorizedPage';
 
 // Define routes without authentication
 const publicRoutes = [
-  { path: '/', element: <HomePage /> },
   { path: 'activate/:uid/:token', element: <EmailActivationPage /> },
   { path: 'request-reset-password', element: <RequestPasswordResetPage /> },
   { path: 'password-reset/:uid/:token', element: <PasswordResetConfirmPage /> },
@@ -30,6 +29,7 @@ const publicRoutes = [
 
 // Define routes for authenticated users only
 const authenticatedRoutes = [
+  { path: '/', element: <HomePage /> },
   { path: 'patient-register', element: <PatientsRegistrationPage /> },
   { path: ':username/', element: <ProfilePage /> },
   { path: 'patient/:id', element: <PatientsDetailPage /> },
