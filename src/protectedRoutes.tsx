@@ -24,5 +24,4 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireAuth =
   // If all checks pass, render the children components
   return <>{children}</>;
 };
-
 export default ProtectedRoute;
