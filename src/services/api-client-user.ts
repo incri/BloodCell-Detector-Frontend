@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuth } from '../components/authContext';
+import swal from 'sweetalert2';
 
 const useApiClientUser = () => {
   const { user, logout } = useAuth();
@@ -7,6 +8,17 @@ const useApiClientUser = () => {
   const apiClientUser = axios.create({
     baseURL: user ? `http://127.0.0.1:8000/hospitals/${user.hospital_id}/` : '',
   });
+
+  const handleSessionExpiration = () => {
+    swal.fire({
+      title: "Session Expired",
+      text: "Your session has been expired! Please login again.",
+      icon: "info",
+      confirmButtonText: "OK",
+      confirmButtonColor: "#3085d6",
+      // You can add more configurations here if needed
+    })
+  };
 
   // Request interceptor to add the access token to the headers
   apiClientUser.interceptors.request.use(
@@ -42,7 +54,7 @@ const useApiClientUser = () => {
           return apiClientUser(originalRequest);
         } catch (refreshError) {
           logout(); // Assuming logout is a method in your auth context to handle user logout
-          alert('Session expired, please log in again.');
+          handleSessionExpiration();
           return Promise.reject(refreshError);
         }
       }
