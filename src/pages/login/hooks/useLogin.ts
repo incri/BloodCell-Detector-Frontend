@@ -21,8 +21,8 @@ export const useLogin = () => {
       });
 
       if (response?.access && response?.user) {
-        const { access, user } = response;
-        login(access, user);
+        const { access, refresh, user } = response;
+        login(access, refresh, user,);
         return true;
       }
 

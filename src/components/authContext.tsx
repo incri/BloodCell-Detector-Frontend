@@ -5,23 +5,21 @@ interface User {
   username: string;
   is_hospital_admin: boolean;
   is_superuser: boolean;
-  hospital:string
-  full_name: string
-  hospital_id:string
+  hospital: string;
+  full_name: string;
+  hospital_id: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null; // Include user details
-  login: (token: string, user: User) => void; // Modify login function to accept user details
+  user: User | null;
+  login: (accessToken: string, refreshToken: string, user: User) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const token = localStorage.getItem("authToken");
     return !!token;
@@ -31,8 +29,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     return userString ? JSON.parse(userString) : null;
   });
 
-  const login = (token: string, userData: User) => {
-    localStorage.setItem("authToken", token);
+  const login = (accessToken: string, refreshToken: string, userData: User) => {
+    localStorage.setItem("authToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("user", JSON.stringify(userData));
     setIsAuthenticated(true);
     setUser(userData);
@@ -40,6 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
     setIsAuthenticated(false);
     setUser(null);
