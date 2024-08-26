@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { CanceledError } from 'axios';
-import useApiClientUser from '../services/api-client-user';
+import {useApiClientUser} from '../services/api-client';
 
 interface FetchResponse<T> {
   count: number;

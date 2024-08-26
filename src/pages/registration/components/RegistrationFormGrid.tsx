@@ -33,7 +33,7 @@ const RegistrationFormGrid: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Hospital[]>([]);
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
   const [isHospitalAdmin, setIsHospitalAdmin] = useState(false);
-  const { loading, error, registerUser, response } = useRegister();
+  const { loading, error, registerUser } = useRegister();
   const {user} = useAuth()
   const navigate = useNavigate();
   const hospitalsData = user && user.is_superuser ? useHospital(query, null, 'asc') : { data: [] };
