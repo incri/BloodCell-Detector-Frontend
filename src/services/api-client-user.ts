@@ -50,7 +50,7 @@ const useApiClientUser = () => {
           localStorage.setItem('authToken', newAccessToken);
 
           // Update the original request with the new access token and retry
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `BEARER ${newAccessToken}`;
           return apiClientUser(originalRequest);
         } catch (refreshError) {
           logout(); // Assuming logout is a method in your auth context to handle user logout
