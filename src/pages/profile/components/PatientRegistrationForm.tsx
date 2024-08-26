@@ -21,7 +21,7 @@ import {useAuth} from "../../../components/authContext"
 import { usePatientRegister } from "../hooks/usePatientRegister";
 
 const PatientRegistrationForm: React.FC = () => {
-  const { loading, error, registerPatient, response } = usePatientRegister();
+  const { loading, error, registerPatient } = usePatientRegister();
   const {user} = useAuth()
   const navigate = useNavigate();
   
@@ -92,10 +92,7 @@ const PatientRegistrationForm: React.FC = () => {
             />
             {(errors.email && (
               <Text color="red.500">{errors.email.message}</Text>
-            )) ||
-              (response && response.status === 400 && response.data.email && (
-                <Text color="red.500">Email already in use.</Text>
-              ))}
+            )) || <Text color="red.500">{error?.email}</Text>}
           </FormControl>
           <FormControl id="phone">
             <FormLabel mb={1}>Phone</FormLabel>
@@ -132,7 +129,7 @@ const PatientRegistrationForm: React.FC = () => {
               Submit
             </Button>
           </Flex>
-          {error && <Text color="red.500">{error.message}</Text>}
+          {error && <Text color="red.500">{error.general}</Text>}
         </VStack>
       </form>
     </Box>
