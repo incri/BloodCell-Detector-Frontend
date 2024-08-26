@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useApiClientUser from "../services/api-client-user";
+import {useApiClientUser} from "../services/api-client";
 
 
 const useFetchResponseData = <T>(endpoint: string) => {
