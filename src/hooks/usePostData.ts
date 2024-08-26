@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import useApiClient from '../services/api-client';
+import {useApiClient} from '../services/api-client';
 
 interface PostDataParams {
   url: string;

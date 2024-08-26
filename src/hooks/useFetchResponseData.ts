@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import useApiClient from "../services/api-client";
+import {useApiClient} from "../services/api-client";
 
 const useFetchResponseData = <T>(endpoint: string) => {
   const apiClient = useApiClient(); // Get the API client instance using the custom hook

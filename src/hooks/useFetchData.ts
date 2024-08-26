@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import useApiClient from '../services/api-client';
+import {useApiClient} from '../services/api-client';
 
 interface FetchResponse<T> {
   count: number;

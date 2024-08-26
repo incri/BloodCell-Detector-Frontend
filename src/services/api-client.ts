@@ -2,11 +2,11 @@ import axios from 'axios';
 import { useAuth } from '../components/authContext';
 import swal from 'sweetalert2';
 
-const useApiClient = () => {
-  const {logout } = useAuth();
+const createApiClient = (baseURL: string) => {
+  const { logout } = useAuth();
 
   const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:8000/',
+    baseURL,
   });
 
   const handleSessionExpiration = () => {
@@ -65,4 +65,15 @@ const useApiClient = () => {
   return apiClient;
 };
 
-export default useApiClient;
+// Factory functions to create specific API clients
+const useApiClientUser = () => {
+  const { user } = useAuth();
+  const baseURL = user ? `http://127.0.0.1:8000/hospitals/${user.hospital_id}/` : '';
+  return createApiClient(baseURL);
+};
+
+const useApiClient = () => {
+  return createApiClient('http://127.0.0.1:8000/');
+};
+
+export { useApiClientUser, useApiClient };
