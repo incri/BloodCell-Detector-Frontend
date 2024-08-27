@@ -1,4 +1,4 @@
-import useUserFetchData from "../../../hooks/useUserFetchData";
+import useFetchData from "../../../hooks/useFetchData";
 
 
 interface Address {
@@ -45,7 +45,7 @@ export interface PatientData {
   }
 
   const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => 
-    useUserFetchData<PatientData>("patients/", query, sortField, sortOrder);
+    useFetchData<PatientData>("patients/", query, sortField, sortOrder, true);
 
 
 export default usePatients;
