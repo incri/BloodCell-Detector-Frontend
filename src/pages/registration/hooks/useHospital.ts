@@ -8,6 +8,11 @@ export interface Hospital {
   email: string;
 }
 
-const useHospital = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => useFetchData<Hospital>("/hospitals/", query, sortField, sortOrder);
+const useHospital = (
+  query: string,
+  sortField: string | null,
+  sortOrder: 'asc' | 'desc',
+  page: number // Add page parameter
+) => useFetchData<Hospital>("/hospitals/", query, sortField, sortOrder, false, page);
 
 export default useHospital;
