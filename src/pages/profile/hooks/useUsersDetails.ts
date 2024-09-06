@@ -18,8 +18,9 @@ export interface User {
     is_hospital_admin: boolean;
   }  
 
-  const useUsersDetail = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => 
-    useFetchData<User>("/auth/users/", query, sortField, sortOrder);
+  const useUsersDetail = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc',   page: number // Add page parameter
+  ) => 
+    useFetchData<User>("/auth/users/", query, sortField, sortOrder,false, page);
 
 
 export default useUsersDetail;
