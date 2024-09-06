@@ -51,8 +51,8 @@ export interface PatientData {
     blood_tests: BloodTest[];
   }
 
-  const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => 
-    useFetchData<PatientData>("patients/", query, sortField, sortOrder, true);
+  const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc', page:number) => 
+    useFetchData<PatientData>("patients/", query, sortField, sortOrder, true, page);
 
 
 export default usePatients;
