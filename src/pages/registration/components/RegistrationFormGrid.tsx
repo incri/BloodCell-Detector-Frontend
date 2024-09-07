@@ -26,7 +26,11 @@ import { useRegister } from "../hooks/useRegister";
 import { useEmailStore } from "../state-managements/store/emailStore";
 import useHospital, { Hospital } from "../hooks/useHospital";
 import {useAuth} from "../../../components/authContext"
-
+interface PaginatedHospitalResponse {
+  results: Hospital[];
+  next: string | null;
+  previous: string | null;
+}
 const RegistrationFormGrid: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [query, setQuery] = useState("");
@@ -36,8 +40,9 @@ const RegistrationFormGrid: React.FC = () => {
   const { loading, error, registerUser } = useRegister();
   const {user} = useAuth()
   const navigate = useNavigate();
-  const hospitalsData = user && user.is_superuser ? useHospital(query, null, 'asc') : { data: [] };
-  const { data: hospitals } = hospitalsData;
+  const { data: hospitalsData } = user && user.is_superuser
+  ? useHospital(query, null, 'asc', 1)
+  : { data: { results: [], next: null, previous: null } as PaginatedHospitalResponse };
 
   
 
@@ -56,8 +61,8 @@ const RegistrationFormGrid: React.FC = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = event.target.value;
     setQuery(newQuery);
-    if (newQuery.trim() !== "" && hospitals) {
-      setSearchResults(hospitals.filter((hospital) =>
+    if (newQuery.trim() !== "" && hospitalsData) {
+      setSearchResults(hospitalsData.results.filter((hospital) =>
         hospital.name.toLowerCase().includes(newQuery.toLowerCase())
       ));
     } else {

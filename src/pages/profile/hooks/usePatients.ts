@@ -14,6 +14,12 @@ export interface ImageData {
     blood_test?: string;
     result?: string;
   }
+
+  export interface DetectionData{
+    id: number;
+    detection_type: string;
+    detection_value: number;
+  }
   
 export interface Result {
     image: string | undefined;
@@ -21,6 +27,7 @@ export interface Result {
     created_at: string;
     description: string;
     result_images: ImageData[];
+    detections: DetectionData[];
     bloodtest: string;
   }
   
@@ -44,8 +51,8 @@ export interface PatientData {
     blood_tests: BloodTest[];
   }
 
-  const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc') => 
-    useFetchData<PatientData>("patients/", query, sortField, sortOrder, true);
+  const usePatients = (query: string, sortField: string | null, sortOrder: 'asc' | 'desc', page:number) => 
+    useFetchData<PatientData>("patients/", query, sortField, sortOrder, true, page);
 
 
 export default usePatients;

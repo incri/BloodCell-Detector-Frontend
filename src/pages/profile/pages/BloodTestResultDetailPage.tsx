@@ -1,34 +1,29 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Box, Heading, Text, Image, SimpleGrid, Button, VStack } from '@chakra-ui/react';
+import { Box, Heading, Text, Image, SimpleGrid, Button, VStack, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { FaDownload } from 'react-icons/fa';
-import { BloodTest, PatientData, Result } from '../hooks/usePatients';
+import { BloodTest, DetectionData, PatientData, Result } from '../hooks/usePatients';
 import useBloodTestResult from '../hooks/useBloodTestResult';
 
 const BloodTestResultDetailPage: React.FC = () => {
   const location = useLocation();
-  const { result, patient, blood_test } = location.state as {result: Result, patient: PatientData, blood_test: BloodTest};
+  const { result, patient, blood_test } = location.state as { result: Result, patient: PatientData, blood_test: BloodTest };
 
   if (!result) {
     return <Text>No result data available</Text>;
   }
 
-  const { data: reportData, isLoading, refetch } = useBloodTestResult(patient.id, blood_test.id, result.id );
+  const { data: reportData, isLoading, refetch } = useBloodTestResult(patient.id, blood_test.id, result.id);
 
   const handleDownloadReport = async () => {
     try {
-      // Refetch to ensure the latest data
       await refetch();
+      console.log(reportData);
 
-      console.log(reportData)
-
-      // Assuming useBloodTestResult returns the data correctly for report download
       if (reportData) {
-        // Create a blob URL for the PDF blob data received
         const blob = new Blob([reportData], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
 
-        // Trigger download using an anchor tag
         const a = document.createElement('a');
         a.href = url;
         a.download = `blood-test-report-${result.id}.pdf`;
@@ -36,15 +31,18 @@ const BloodTestResultDetailPage: React.FC = () => {
         a.click();
         document.body.removeChild(a);
 
-        // Release the object URL
         window.URL.revokeObjectURL(url);
       }
-
     } catch (error) {
       console.error('Error downloading report:', error);
-      // Handle error state or show a notification to the user
     }
   };
+
+  // Filter detections with non-zero values
+  const filteredDetections: DetectionData[] = result.detections.filter(
+    (detection: DetectionData) => detection.detection_value !== 0
+  );
+
 
   return (
     <VStack>
@@ -64,6 +62,36 @@ const BloodTestResultDetailPage: React.FC = () => {
         ) : (
           <Text>No images available</Text>
         )}
+
+        {/* Dynamic Table for Detections */}
+        {filteredDetections.length > 0 && (
+          <Box mt={6} w="100%" p={4} borderWidth="1px" borderRadius="md" boxShadow="md">
+          <Heading as="h3" size="md" mb={4} p={2} borderBottom="1px" borderColor="gray.200">
+            Detections
+          </Heading>
+          <Table variant="striped" colorScheme="gray">
+            <Thead>
+              <Tr>
+                <Th fontWeight="bold" py={3}>
+                  Cell Type
+                </Th>
+                <Th fontWeight="bold" py={3}>
+                  Count
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {filteredDetections.map((detection: DetectionData) => (
+                <Tr key={detection.id} >
+                  <Td py={3}>{detection.detection_type.replace(/_/g, ' ')}</Td>
+                  <Td py={3}>{detection.detection_value}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+        
+        )}
       </Box>
 
       <Button
@@ -72,7 +100,7 @@ const BloodTestResultDetailPage: React.FC = () => {
         variant="ghost"
         size="sm"
         onClick={handleDownloadReport}
-        isLoading={isLoading} // Show loading state while downloading
+        isLoading={isLoading}
       >
         Download Report
       </Button>
