@@ -271,7 +271,7 @@ const BloodTestDetailPage: React.FC = () => {
                 }}
               >
                 <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
-                  {blood_tests?.results.map((result: Result) => (
+                  {blood_tests.results?.map((result: Result) => (
                     <Box
                       key={result.id}
                       mb={4}

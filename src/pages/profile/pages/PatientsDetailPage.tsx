@@ -17,7 +17,7 @@ const PatientsDetailPage: React.FC = () => {
   if (error) return (
     <Alert status="error">
       <AlertIcon />
-      {error}
+      {error.message}
     </Alert>
   );
 
