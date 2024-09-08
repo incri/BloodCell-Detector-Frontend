@@ -30,7 +30,7 @@ const BloodTestCard: React.FC<BloodTestCardProps> = ({ test, patient }) => {
       <Flex direction="column">
         <Text fontSize="lg" fontWeight="bold">{test.title}</Text>
         <Text mt={2}>{test.description}</Text>
-        <Text mt={2} color="gray.500">Results: {test.results.length}</Text>
+        <Text mt={2} color="gray.500">Results: {test.result_count}</Text>
       </Flex>
     </Box>
   );

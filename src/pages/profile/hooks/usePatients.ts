@@ -38,7 +38,9 @@ export interface BloodTest {
     images: ImageData[];
     results: Result[];
     patient: string;
+    result_count?:number;
   }
+  
   
 export interface PatientData {
     id: string;
