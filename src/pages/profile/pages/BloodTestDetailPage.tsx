@@ -251,7 +251,7 @@ const BloodTestDetailPage: React.FC = () => {
             <Divider mb={4} />
             {blood_tests?.results.length > 0 ? (
               <Box
-                maxH="600px"
+                maxH="555px"
                 overflowY="auto"
                 sx={{
                   // Custom scrollbar styles
