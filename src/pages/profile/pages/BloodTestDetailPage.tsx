@@ -250,36 +250,64 @@ const BloodTestDetailPage: React.FC = () => {
             </Heading>
             <Divider mb={4} />
             {blood_tests?.results.length > 0 ? (
-              <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
-                {blood_tests?.results.map((result: Result) => (
-                  <Box
-                    key={result.id}
-                    mb={4}
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    overflow="hidden"
-                    boxShadow="sm"
-                    cursor="pointer"
-                    onClick={() => handleResultClick(result, patient, blood_tests)}
-                  >
-                    <Text mb={2}><strong>ID:</strong> {result.id}</Text>
-                  {result.result_images.length > 0 ? (
-                    <Flex justifyContent="center">
-                      {renderAlbum(result.result_images)}
-                    </Flex>
-                  ) : (
-                    <Flex direction="column" alignItems="center" justifyContent="center" height="100%">
-                      <FaImage size="50px" color="gray" />
-                      <Text>No images available</Text>
-                    </Flex>
-                  )}
-                  </Box>
-                ))}
-              </SimpleGrid>
+              <Box
+                maxH="600px"
+                overflowY="auto"
+                sx={{
+                  // Custom scrollbar styles
+                  "&::-webkit-scrollbar": {
+                    width: "4px",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    background: "white",
+                    borderRadius: "8px",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    background: "#1a732b", // Darker green on hover
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                }}
+              >
+                <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4}>
+                  {blood_tests?.results.map((result: Result) => (
+                    <Box
+                      key={result.id}
+                      mb={4}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      overflow="hidden"
+                      boxShadow="sm"
+                      cursor="pointer"
+                      onClick={() => handleResultClick(result, patient, blood_tests)}
+   
+                    >
+                      <Text mb={2}>
+                        <strong>ID:</strong> {result.id}
+                      </Text>
+                      {result.result_images.length > 0 ? (
+                        <Flex justifyContent="center">{renderAlbum(result.result_images)}</Flex>
+                      ) : (
+                        <Flex
+                          direction="column"
+                          alignItems="center"
+                          justifyContent="center"
+                          height="100%"
+                        >
+                          <FaImage size="50px" color="gray" />
+                          <Text>No images available</Text>
+                        </Flex>
+                      )}
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              </Box>
             ) : (
               <Text>No results available</Text>
             )}
           </Box>
+
         </Box>
 
         <Box flex="3" ml={4}>
