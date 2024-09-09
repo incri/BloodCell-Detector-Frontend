@@ -68,7 +68,7 @@ const PatientsDetailPage: React.FC = () => {
           <GridItem>
             <Flex align="center">
               <Icon as={FaHome} color="teal.500" mr={2} />
-              <Text fontSize="lg">{patient.address ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
+              <Text fontSize="lg">{patient.address.city ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
               </Text>
             </Flex>
           </GridItem>
