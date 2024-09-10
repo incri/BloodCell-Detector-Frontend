@@ -48,19 +48,9 @@ const PatientCard: React.FC<PatientCardProps> = ({ patient, onEdit }) => {
       <VStack align="start" spacing={2}>
         <Flex align="center">
           <Box as={FaUser} fontSize="2xl" color="teal.500" mr="2" />
-          <Box
-            color="gray.500"
-            fontWeight="semibold"
-            letterSpacing="wide"
-            fontSize="xs"
-            textTransform="uppercase"
-            flex="1"
->
-            {patient.address ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
-          </Box>
-
-          
-          
+          <Text fontSize="sm">{patient.address?.city? `${patient.address.street}, ${patient.address.city}` : 'No data'}
+              </Text>
+        
         </Flex>
 
         <HStack justifyContent={'space-between'} width={"100%"}>

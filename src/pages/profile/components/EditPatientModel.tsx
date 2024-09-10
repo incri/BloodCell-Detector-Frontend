@@ -20,7 +20,6 @@ import { PatientData } from '../hooks/usePatients';
 import { patientsRegistrationFormSchema } from '../validations/PatientRegistrationFormSchema';
 import { useEditPatient } from '../hooks/useEditPatient';
 
-
 interface EditPatientModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,7 +35,11 @@ const EditPatientModal: React.FC<EditPatientModalProps> = ({ isOpen, onClose, pa
       phone: patient?.phone || '',
       email: patient?.email || '',
       birth_date: patient?.birth_date || '',
-
+      address:{
+        street: patient?.address.street || '',
+        city: patient?.address.city  || '', 
+      }
+     
     },
   });
 
@@ -45,11 +48,16 @@ const EditPatientModal: React.FC<EditPatientModalProps> = ({ isOpen, onClose, pa
   useEffect(() => {
     if (patient) {
       reset({
-      first_name: patient?.first_name ,
-      last_name: patient?.last_name ,
-      phone: patient?.phone ,
-      email: patient?.email ,
-      birth_date: patient?.birth_date ,
+        first_name: patient?.first_name,
+        last_name: patient?.last_name,
+        phone: patient?.phone,
+        email: patient?.email,
+        birth_date: patient?.birth_date,
+        address:{
+          street: patient?.address.street,
+          city: patient?.address.city,
+        }
+       
       });
     }
   }, [patient, reset]);
@@ -70,7 +78,7 @@ const EditPatientModal: React.FC<EditPatientModalProps> = ({ isOpen, onClose, pa
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Hospital</ModalHeader>
+        <ModalHeader>Edit Patient</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -94,19 +102,30 @@ const EditPatientModal: React.FC<EditPatientModalProps> = ({ isOpen, onClose, pa
               <Input {...register('email')} />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
-            <FormControl id="birth_date">
-            <FormLabel mb={1}>Birth Date</FormLabel>
-            <InputGroup>
-              <Input
-                type= "date"
-                placeholder="Enter your DOB"
-                {...register("birth_date")}
-              />
-            </InputGroup>
-            {errors.birth_date && (
-              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            )}
-          </FormControl>
+            <FormControl id="birth_date" mt={4}>
+              <FormLabel>Birth Date</FormLabel>
+              <InputGroup>
+                <Input
+                  type="date"
+                  placeholder="Enter your DOB"
+                  {...register("birth_date")}
+                />
+              </InputGroup>
+              {errors.birth_date && (
+                <FormErrorMessage>{errors.birth_date?.message}</FormErrorMessage>
+              )}
+            </FormControl>
+            {/* Hardcoded Address Fields */}
+            <FormControl id="street" mt={4} isInvalid={!!errors?.address?.street}>
+              <FormLabel>Street</FormLabel>
+              <Input {...register('address.street')} />
+              <FormErrorMessage>{errors.address?.street?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl id="city" mt={4} isInvalid={!!errors?.address?.city}>
+              <FormLabel>Street</FormLabel>
+              <Input {...register('address.city')} />
+              <FormErrorMessage>{errors.address?.city?.message}</FormErrorMessage>
+            </FormControl>
             <ModalFooter>
               <Button colorScheme="blue" mr={3} type="submit" isLoading={loading}>
                 Save

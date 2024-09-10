@@ -3,7 +3,7 @@ import PatientRegistrationForm from "../components/PatientRegistrationForm";
 
 const PatientsRegistrationPage = () => {
   return (
-    <Center margin={8}>
+    <Center margin={4}>
       <PatientRegistrationForm />
     </Center>
   );

@@ -10,9 +10,19 @@ export const patientsRegistrationFormSchema = z.object({
     .nonempty("Last name is required")
     .regex(/^[A-Za-z]+$/, "Only alphabetic characters allowed"),
   email: z.string().email("Invalid email format").nonempty("Email is required"),
-  phone: z.string().nonempty("phone is required"),
+  phone: z.string().nonempty("Phone is required"),
   birth_date: z.string(),
-    
+  
+  // Address validation schema
+  address: z.object({
+    street: z
+      .string()
+      .nonempty("Street is required"),
+    city: z
+      .string()
+      .nonempty("City is required"),
+  }),
 });
 
+// Infer the type for use in form data
 export type PatientRegistrationFormData = z.infer<typeof patientsRegistrationFormSchema>;
