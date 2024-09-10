@@ -58,7 +58,7 @@ const useFetchData = <T>(
   };
 
   return useQuery<FetchResponse<T>, Error>({
-    queryKey: [useUserClient ? 'userFetchData' : 'fetchData', endpoint, query, sortField, sortOrder, page],
+    queryKey: [useUserClient ? 'userFetchData' : 'fetchData', endpoint],
     queryFn: fetchFunc,
     placeholderData: keepPreviousData, // Keep previous data while fetching new data
   });

@@ -1,19 +1,24 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Text, Flex, Spinner, Alert, AlertIcon, VStack, Grid, GridItem, Icon, IconButton, Divider, Button, useDisclosure } from '@chakra-ui/react';
+import { Box, Text, Flex, Spinner, Alert, AlertIcon, VStack, Grid, GridItem, Icon, IconButton, Divider, Button, useDisclosure, Center } from '@chakra-ui/react';
 import { FaEnvelope, FaPhone, FaBirthdayCake, FaHome, FaUser, FaEdit } from 'react-icons/fa';
 import usePatientDetail from '../hooks/usePatientsDetail';
 import BloodTestCard from '../components/BloodTestCard';
 import { MdAddchart } from 'react-icons/md';
 import AddBloodTestModal from '../components/AddBloodTestModal';
+import EditPatientModal from '../components/EditPatientModel';
 
 const PatientsDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: patient, error, isLoading } = usePatientDetail(id!);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
-
-  if (isLoading) return <Spinner />;
+  if (isLoading) return (
+    <Center h="100vh">
+      <Spinner />
+    </Center>
+  );
   if (error) return (
     <Alert status="error">
       <AlertIcon />
@@ -41,7 +46,7 @@ const PatientsDetailPage: React.FC = () => {
             colorScheme="teal"
             variant="ghost"
             size="sm"
-            onClick={() => {/* Handle edit action here */}}
+            onClick={onEditOpen} // Open edit modal on click
           />
         </Flex>
         <Divider orientation="horizontal" mb={4} />
@@ -68,7 +73,8 @@ const PatientsDetailPage: React.FC = () => {
           <GridItem>
             <Flex align="center">
               <Icon as={FaHome} color="teal.500" mr={2} />
-              <Text fontSize="lg">{patient.address.city ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
+              <Text fontSize="lg">
+                {patient.address.city ? `${patient.address.street}, ${patient.address.city}` : 'No data'}
               </Text>
             </Flex>
           </GridItem>
@@ -80,23 +86,18 @@ const PatientsDetailPage: React.FC = () => {
         borderRadius="lg"
         boxShadow="md"
       >
-        <Flex width={"100%"} justifyContent={'space-between'}>
-
-        <Text fontSize="lg" fontWeight="bold" mb={4}>Blood Tests</Text>
-        <Button
+        <Flex width="100%" justifyContent="space-between">
+          <Text fontSize="lg" fontWeight="bold" mb={4}>Blood Tests</Text>
+          <Button
             colorScheme="teal"
             ml={2}
             leftIcon={<Icon as={MdAddchart} />}
-            onClick={onOpen}
+            onClick={onAddOpen}
           >
             New
           </Button>
-
-          
-
-
         </Flex>
-        
+
         {patient.blood_tests.length === 0 ? (
           <Text>No blood tests available</Text>
         ) : (
@@ -107,8 +108,8 @@ const PatientsDetailPage: React.FC = () => {
           </VStack>
         )}
       </Box>
-      <AddBloodTestModal isOpen={isOpen} onClose={onClose} patient={patient} />
-
+      <AddBloodTestModal isOpen={isAddOpen} onClose={onAddClose} patient={patient} />
+      <EditPatientModal isOpen={isEditOpen} onClose={onEditClose} patient={patient} />
     </Box>
   );
 };

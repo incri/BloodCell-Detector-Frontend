@@ -16,7 +16,7 @@ export const useEditPatient = () => {
         data: patientData,
       });
 
-      const queryKey = ['userFetchData',`patients/`]
+      const queryKey = ['data', `patients/${id}/`]
       console.log(queryKey)
       queryClient.invalidateQueries({
         queryKey: queryKey
