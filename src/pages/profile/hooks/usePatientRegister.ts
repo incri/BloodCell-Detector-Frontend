@@ -8,6 +8,10 @@ export interface PatientDataRegister {
   email: string;
   phone: string;
   birth_date: string;
+  address:{
+    street: string
+    city: string
+  }
 
 }
 
