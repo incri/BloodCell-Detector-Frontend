@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import ColorModeSwitch from './ColorModeSwitch';
 
 interface ProfileDrawerProps {
-  src: string;
+  src: string | undefined;
   alt: string;
 }
 
