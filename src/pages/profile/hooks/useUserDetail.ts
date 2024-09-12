@@ -7,6 +7,7 @@ export interface User {
   email: string;
   first_name: string;
   last_name: string;
+  profile_image?: string;
 }
 
 const useUserDetail = () => useFetchResponseData<User>("/auth/users/me/");

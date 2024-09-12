@@ -81,7 +81,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <Alert status="error">
           <AlertIcon />
-          {error}
+          {error.message}
         </Alert>
       </Box>
     );
@@ -116,7 +116,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
               />
               <VStack spacing={6}>
                 <Box position="relative" boxSize="200px" borderRadius="full" overflow="hidden" border="3px solid" borderColor="gray.200" boxShadow="lg">
-                  <Image src={avatar ? URL.createObjectURL(avatar) : "https://via.placeholder.com/150"} boxSize="100%" objectFit="cover" />
+                  <Image src={userDetail?.profile_image} boxSize="100%" objectFit="cover" />
                   <Input type="file" position="absolute" top="0" left="0" width="100%" height="100%" opacity="0" cursor="pointer" onChange={handleAvatarChange} />
                 </Box>
                 <VStack align="flex-start" spacing={2} width="60%">
@@ -168,7 +168,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
                   borderColor="gray.200"
                   boxShadow="lg"
                 >
-                  <Image src={"https://via.placeholder.com/150"} boxSize="100%" objectFit="cover" />
+                  <Image src= {userDetail?.profile_image} boxSize="100%" objectFit="cover" />
                 </Box>
                 <VStack align="flex-start" spacing={2} width="60%">
                   <Text fontSize="2xl" fontWeight="bold">
