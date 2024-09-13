@@ -8,6 +8,7 @@ interface User {
   hospital: string;
   full_name: string;
   hospital_id: string;
+  profile_image?:string;
 }
 
 interface AuthContextType {

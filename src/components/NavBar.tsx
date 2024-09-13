@@ -45,7 +45,7 @@ const Navbar = () => {
         </Link>
         {isAuthenticated && (
           <ProfileDrawer
-            src="https://via.placeholder.com/50"
+            src= {user?.profile_image}
             alt="Profile Image"
           />
         )}
