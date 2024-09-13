@@ -4,7 +4,9 @@ interface UserData {
   first_name: string;
   last_name: string;
   email: string;
+  profile_image?: File | string; // Optional field to handle file upload or URL
 }
+
 
 export const useProfile = () => {
   const { isPending : loading, error, mutate: profileUser, data: response } = usePostData();
