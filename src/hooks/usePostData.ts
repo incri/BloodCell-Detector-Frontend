@@ -6,6 +6,8 @@ interface PostDataParams {
   url: string;
   method: string;
   data?: any;
+  headers?: Record<string, string>;  // Add this line to allow headers
+
 }
 
 // Function to handle API errors

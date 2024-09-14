@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Grid, GridItem, Box, useBreakpointValue, VStack, Button, Image, Input, Divider, Spinner, Alert, AlertIcon, Text, IconButton } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Grid, GridItem, Box, useBreakpointValue, VStack, Button, Image, 
+  Input, Divider, Spinner, Alert, AlertIcon, Text, IconButton 
+} from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
 import useUserDetail from '../hooks/useUserDetail';
 import { useProfile } from '../hooks/useProfile';
@@ -17,24 +20,37 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
   const [userDetails, setUserDetails] = useState({
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
   });
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null); // For avatar preview
 
   const gridTemplateColumns = useBreakpointValue({
     base: '1fr',
     lg: '2fr 3fr',
   });
 
-  const { data: userDetail, error, isLoading } = useUserDetail();
+  const { data: userDetail, error, isLoading, refetch } = useUserDetail(); // Add refetch
   const { loading: saving, updateUserProfile } = useProfile();
+
+  useEffect(() => {
+    if (avatar) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(avatar);
+    } else {
+      setAvatarPreview(null);
+    }
+  }, [avatar]);
 
   const handleEdit = () => {
     if (userDetail) {
       setUserDetails({
         firstName: userDetail.first_name,
         lastName: userDetail.last_name,
-        email: userDetail.email
+        email: userDetail.email,
       });
       setIsEditing(true);
     }
@@ -42,17 +58,30 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
 
   const handleSave = async () => {
     try {
-      await profileFormSchema.parseAsync({ first_name: userDetails.firstName, last_name: userDetails.lastName, email: userDetails.email });
-      await updateUserProfile({ first_name: userDetails.firstName, last_name: userDetails.lastName, email: userDetails.email });
-      setIsEditing(false);
-      const queryKey = ['data',"/auth/users/me/"]
-      console.log(queryKey)
-      queryClient.invalidateQueries({
-        queryKey: queryKey
+      // Validate the input data
+      await profileFormSchema.parseAsync({
+        first_name: userDetails.firstName,
+        last_name: userDetails.lastName,
+        email: userDetails.email,
+        profile_image: avatar || undefined, // Include avatar in validation
       });
 
+      // Send data including avatar (if present)
+      await updateUserProfile({
+        first_name: userDetails.firstName,
+        last_name: userDetails.lastName,
+        email: userDetails.email,
+        profile_image: avatar || undefined,
+      });
+
+      // Invalidate and refetch the user profile data after update
+      await queryClient.invalidateQueries({ queryKey: ['data', "/auth/users/me/"] });
+      await refetch(); // Explicitly refetch after invalidation
+
+      setIsEditing(false);
+
     } catch (err) {
-      console.error('Validation Error:', err);
+      console.error('Validation or Update Error:', err);
     }
   };
 
@@ -65,8 +94,6 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
   const handleCancel = () => {
     setIsEditing(false);
   };
-
-
 
   if (isLoading) {
     return (
@@ -116,7 +143,12 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
               />
               <VStack spacing={6}>
                 <Box position="relative" boxSize="200px" borderRadius="full" overflow="hidden" border="3px solid" borderColor="gray.200" boxShadow="lg">
-                  <Image src={userDetail?.profile_image} boxSize="100%" objectFit="cover" />
+                  {/* Avatar preview */}
+                  {avatarPreview ? (
+                    <Image src={avatarPreview} boxSize="100%" objectFit="cover" />
+                  ) : (
+                    <Image src={userDetail?.profile_image} boxSize="100%" objectFit="cover" />
+                  )}
                   <Input type="file" position="absolute" top="0" left="0" width="100%" height="100%" opacity="0" cursor="pointer" onChange={handleAvatarChange} />
                 </Box>
                 <VStack align="flex-start" spacing={2} width="60%">
@@ -134,7 +166,6 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
                     placeholder="Email"
                     value={userDetails.email}
                     onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
-                    hidden
                   />
                   <Button
                     width="100%"
@@ -168,7 +199,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ TabComponent }) => {
                   borderColor="gray.200"
                   boxShadow="lg"
                 >
-                  <Image src= {userDetail?.profile_image} boxSize="100%" objectFit="cover" />
+                  <Image src={userDetail?.profile_image} boxSize="100%" objectFit="cover" />
                 </Box>
                 <VStack align="flex-start" spacing={2} width="60%">
                   <Text fontSize="2xl" fontWeight="bold">
