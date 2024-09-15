@@ -24,6 +24,7 @@ import MenuButton from './MenuButtons';
 import { FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import ColorModeSwitch from './ColorModeSwitch';
+import useUserDetail from '../pages/profile/hooks/useUserDetail';
 
 interface ProfileDrawerProps {
   src: string | undefined;
@@ -33,8 +34,10 @@ interface ProfileDrawerProps {
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ src, alt }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef<HTMLDivElement>(null);
-  const {user, logout} = useAuth()
+  const { logout} = useAuth()
   const navigate = useNavigate();
+  const { data: userDetail } = useUserDetail(); // Add refetch
+
 
 
   const handleLogout = () => {
@@ -78,8 +81,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ src, alt }) => {
                 <Image src={src} alt={alt} boxSize="100%" objectFit="cover" />
               </Box>
                 <VStack align={'flex-start'} spacing={1}>
-                <Text fontSize={"sm"}>{user?.username}</Text>
-                <Text fontSize={"xs"} color={'gray.500'}>{user?.full_name}</Text>
+                <Text fontSize={"sm"}>{userDetail?.username}</Text>
+                <Text fontSize={"xs"} color={'gray.500'}>{`${userDetail?.first_name} ${userDetail?.last_name}`}</Text>
                 </VStack>
               
               </HStack>
@@ -91,10 +94,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ src, alt }) => {
               <VStack spacing={1} align={'flex-start'}>
               <ColorModeSwitch /> 
               <Divider orientation='horizontal' />
-              <MenuButton icon={FaUser} text="Profile" to={`/${user?.username}`} />
+              <MenuButton icon={FaUser} text="Profile" to={`/${userDetail?.username}`} />
               <Divider orientation='horizontal' />
 
-              <MenuButton icon={FaCog} text="Settings" to={`/${user?.username}/`} />
+              <MenuButton icon={FaCog} text="Settings" to={`/${userDetail?.username}/`} />
 
 
               <Button

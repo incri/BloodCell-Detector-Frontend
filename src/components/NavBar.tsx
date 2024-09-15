@@ -7,6 +7,7 @@ import NavLinks from "./NavLink";
 import { GrOverview } from "react-icons/gr";
 import { GiHospitalCross } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
+import useUserDetail from "../pages/profile/hooks/useUserDetail";
 
 const Navbar = () => {
   const { isAuthenticated, user } = useAuth();
@@ -36,6 +37,9 @@ const Navbar = () => {
   ? [...baseLinks, ...adminLinks, ...hospitalLinks]
   : [...baseLinks, ...hospitalLinks];
 
+  const { data: userDetail } = useUserDetail(); // Add refetch
+
+
   return (
     <VStack width="100%" align="flex-start">
       {/* Logo and Profile Drawer */}
@@ -45,7 +49,7 @@ const Navbar = () => {
         </Link>
         {isAuthenticated && (
           <ProfileDrawer
-            src= {user?.profile_image}
+            src= {userDetail?.profile_image}
             alt="Profile Image"
           />
         )}
