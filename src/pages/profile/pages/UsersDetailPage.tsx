@@ -3,6 +3,8 @@ import { Box, Spinner, Alert, AlertIcon, SimpleGrid, Button, HStack } from '@cha
 import useUsersDetail, { User } from '../hooks/useUsersDetails';
 import ExtraActivityBar from '../components/ExtraActivityBar';
 import UsersDetailCard from '../components/UsersDetailCard';
+import { useNavigate } from 'react-router-dom';
+
 
 const UsersDetailPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +27,7 @@ const UsersDetailPage: React.FC = () => {
   };
 
   const handleOpenCreateModal = () => {
-    // Handle open create modal logic
+    navigate("/register");
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +44,9 @@ const UsersDetailPage: React.FC = () => {
     }
     setPage(1); // Reset to the first page on new sort
   };
+
+  const navigate = useNavigate();
+
 
   return (
     <Box p={4}>
